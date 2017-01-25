@@ -1,5 +1,11 @@
+appdirs==1.4.0
 dj-database-url==0.4.1
 Django==1.10.4
+django-jet==1.0.4
 gunicorn==19.6.0
+packaging==16.8
 psycopg2==2.6.2
+pyparsing==2.1.10
+requests==2.9.1
+six==1.10.0
 whitenoise==3.2
