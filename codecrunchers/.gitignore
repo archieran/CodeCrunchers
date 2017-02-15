@@ -6,3 +6,6 @@ staticfiles
 
 .env
 db.sqlite3
+idea
+.idea
+venv

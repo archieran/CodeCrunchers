@@ -55,7 +55,10 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'codecrunchers.urls'
-
+#Custom setting strings
+ADMIN_SITE_HEADER = "Codecrunchers"
+ADMIN_INDEX_TITLE = "Codecrunchers"
+ADMIN_SITE_TITLE = "Administration"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
