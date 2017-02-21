@@ -29,7 +29,7 @@ DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
-	'jet',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     # http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development
     'whitenoise.runserver_nostatic',
     'django.contrib.staticfiles',
+    'www'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -55,7 +56,7 @@ MIDDLEWARE_CLASSES = [
 ]
 
 ROOT_URLCONF = 'codecrunchers.urls'
-#Custom setting strings
+# Custom setting strings
 ADMIN_SITE_HEADER = "Codecrunchers"
 ADMIN_INDEX_TITLE = "Codecrunchers"
 ADMIN_SITE_TITLE = "Administration"
