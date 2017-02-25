@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^$', www.views.index),
 	url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     url(r'^admin/', admin.site.urls),
+    url(r'^console/', include('codeconsole.urls', 'cc')),
 ]
