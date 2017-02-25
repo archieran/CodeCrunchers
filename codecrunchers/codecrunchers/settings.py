@@ -140,3 +140,5 @@ STATICFILES_DIRS = [
 # Simplified static file serving.
 # https://warehouse.python.org/project/whitenoise/
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+HACKERRANK_API = "hackerrank|367089-1178|7da8ea2429c4ee578e2a9632b3b4d6c780448124"
