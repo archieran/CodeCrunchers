@@ -24,8 +24,8 @@ PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 SECRET_KEY = "qwh8alxn=y2dty*e1)b1c50gt^)3^clfizlr#+6k=!zg^hnots"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-ALLOWED_HOSTS = ['*']#Change this to specific domain while in production
+DEBUG = True
+
 # Application definition
 
 INSTALLED_APPS = [
