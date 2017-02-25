@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.conf.urls import include
 from django.conf import settings
 import www.views
+from django.views.static import serve
 
 admin.site.site_header = settings.ADMIN_SITE_HEADER
 admin.site.index_title = settings.ADMIN_INDEX_TITLE
@@ -28,5 +29,5 @@ urlpatterns = [
 	url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     url(r'^admin/', admin.site.urls),
     url(r'^console/', include('codeconsole.urls', 'cc')),
-	
+	url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
 ]
