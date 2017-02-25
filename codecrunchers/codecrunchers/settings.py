@@ -25,7 +25,7 @@ SECRET_KEY = "qwh8alxn=y2dty*e1)b1c50gt^)3^clfizlr#+6k=!zg^hnots"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+ALLOWED_HOSTS = ['*']#Change this to specific domain while in production
 # Application definition
 
 INSTALLED_APPS = [
