@@ -6,5 +6,5 @@ import views
 urlpatterns = [
     #url(r'^$', include('www.urls')),
     url(r'^$', views.console),
-    url(r'^runcode', views.runcode, name='run_code'),
+    url(r'^runcode$', views.runcode, name='run_code'),
 ]
