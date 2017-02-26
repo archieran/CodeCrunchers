@@ -1,8 +1,5 @@
 from setuptools import setup
 
-with open('README.txt') as file:
-    long_description = file.read()
-
 
 REQUIREMENTS = [
     'requests'
@@ -25,14 +22,13 @@ CLASSIFIERS = [
     ]
 
 setup(name='hackerrank-sdk',
-      version='1.2.1',
+      version='1.2.2',
       description='Python client for HackerRank API',
-      long_description=long_description,
       url='https://github.com/nikhilkumarsingh/hackerrank-sdk',
       author='Nikhil Kumar Singh',
       author_email='nikhilksingh97@gmail.com',
       license='MIT',
       packages=['hackerrank'],
       classifiers=CLASSIFIERS,
-      keywords='hackerrank code compiler online api python client',
+      keywords='hackerrank code compiler online api python client'
       )
