@@ -7,13 +7,14 @@ from .models import ConsoleLanguages
 
 def console(request):
 	context = {}
-	context["languages"] = ConsoleLanguages.objects.all()
+	context["languages"] = ConsoleLanguages.objects.filter(is_active = True)
 	return render(request, 'codeconsole/console.html', context)
 
 def runcode(request):
+	print "Inside runcode"
 	#print request.POST["code"]
 	API_KEY = settings.HACKERRANK_API
-	source_code = request.POST["code"]
+	source_code = request.POST.get("code")
 	compiler = HackerRankAPI(API_KEY)
 	lang = request.POST["lang"]
 	lang = lang.lower()
@@ -21,6 +22,8 @@ def runcode(request):
                        'lang':lang,
 					   # 'testcases':[""]
                        })
+	# Make no changes to below code, please !
+
 	msg = result.message
 	outputs = result.output
 	error = result.error
@@ -38,4 +41,11 @@ def runcode(request):
 	if len(msg) != 0:
 		#Compilation error
 		data = msg
+	# 	Can make changes from here
 	return HttpResponse(data)
+
+def get_ace_name(request):
+	lang_query = request.POST["lang"]
+	print lang_query
+	res = ConsoleLanguages.objects.get(lang=lang_query)
+	return  HttpResponse(res.ace_file_name)

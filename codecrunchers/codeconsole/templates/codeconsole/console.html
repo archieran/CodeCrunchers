@@ -5,7 +5,6 @@
     <script src="{% static 'ace/src-min/ace.js' %}" type="text/javascript" charset="utf-8"></script>
     <div class="container">
         <h3>Console</h3>
-
         <div class="row">
             <div class="col-lg-6 col-sm-12 col-xs-12">
 
@@ -87,7 +86,11 @@
                         output.clearSelection();
                     },
                     error: function () {
+                        output.setValue("Error:\n");
                         console.log("Error");
+                        output.clearSelection();
+                        $('#btnCompile').show();
+                        $('#loader').hide();
                     },
 
                 });
@@ -98,10 +101,30 @@
             $('#lang').on('change', function (e) {
                 var editor = ace.edit('editor');
                 var lang = $('#lang').find(":selected").text();
-                lang = lang.toString().toLowerCase();
-                editor.getSession().setMode("ace/mode/" + lang);
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cc:get_ace_name' %}",
+                    data: {
+                        "lang": lang,
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        lang = data;
+                        editor.getSession().setMode("ace/mode/" + lang);
+                    },
+                    error: function () {
+                        console.log("Error");
+
+                    },
+
+                });
+
+
             });
         });
     </script>
-
+    <script src="{% static 'offlinejs/offline-js.js' %}"></script>
+    <link href="{% static 'offlinejs/offline-theme-chrome.css' %}">
 {% endblock %}
