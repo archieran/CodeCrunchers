@@ -11,7 +11,6 @@
                 <div id="editor">print("Hello world")
                 </div>
                 <br>
-                {% csrf_token %}
                 <div class="col col-lg-4">
                     <div class="form-group float-left">
                         <select class="form-control d-inline-block" id="lang">
@@ -21,9 +20,14 @@
                         </select>
                     </div>
                 </div>
-                <i id="loader" class="fa fa-circle-o-notch fa-spin float-right fa-2x" aria-hidden="true"></i>
-                <button class="btn btn-success float-right" id="btnCompile">Run
+            <i id="loader" class="fa fa-circle-o-notch fa-spin float-right fa-2x" aria-hidden="true"></i>
+             <button class="btn btn-success float-right" id="btnCompile">Run
                 </button>
+            <div class="form-group">
+                <textarea class="form-control" id="custominput" rows="3" placeholder="Enter runtime inputs here"></textarea>
+            </div>
+
+
             </div>
             <div class="col-lg-6 col-sm-12 col-xs-12">
                 <div id="output">
@@ -35,10 +39,10 @@
     <script>
         {#   Initialize the editor     #}
         var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/cobalt");
+        editor.setTheme("ace/theme/pastel_on_dark");
         editor.getSession().setTabSize(4);
         editor.getSession().setMode("ace/mode/python");
-        document.getElementById('editor').style.fontSize = '12px';
+        document.getElementById('editor').style.fontSize = '15px';
         editor.getSession().setUseWrapMode(true);
         editor.setShowPrintMargin(false);
         editor.$blockScrolling = Infinity;
@@ -46,7 +50,7 @@
 
         {#   for the output window   #}
         var outputwindow = ace.edit("output");
-        outputwindow.setTheme("ace/theme/mono_industrial");
+        outputwindow.setTheme("ace/theme/twilight");
         outputwindow.renderer.setShowGutter(false);
         outputwindow.setReadOnly(true);
         outputwindow.setValue("Output:")
@@ -67,6 +71,8 @@
                 var code = editor.session.getValue();
                 var output = ace.edit("output");
                 var lang = $('#lang').find(":selected").text();
+                var userinp = $('#custominput').val();
+                userinp.toString();
                 output.setValue("Running...");
                 $.ajax({
                     type: "POST",
@@ -75,6 +81,7 @@
                         "code": code,
                         "lang": lang,
                         "csrfmiddlewaretoken": "{{csrf_token}}",
+                        "userinp":userinp,
                     },
                     success: function (data) {
                         console.log("Success");
@@ -114,17 +121,14 @@
                         lang = data;
                         editor.getSession().setMode("ace/mode/" + lang);
                     },
-                    error: function () {
+                    error: function (data) {
                         console.log("Error");
+                        console.log(data);
 
                     },
 
                 });
-
-
             });
         });
     </script>
-    <script src="{% static 'offlinejs/offline-js.js' %}"></script>
-    <link href="{% static 'offlinejs/offline-theme-chrome.css' %}">
 {% endblock %}
