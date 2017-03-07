@@ -2,6 +2,7 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
+from codeconsole.models import ConsoleLanguage
 # Create your models here.
 class Problem(models.Model):
     Expert = "X"
@@ -27,5 +28,21 @@ class Problem(models.Model):
     is_archived = models.BooleanField(default=False, verbose_name="Archived")
     is_active = models.BooleanField(default=True, verbose_name="Active")
     difficulty = models.CharField(choices=PROB_DIFFICULTY_LEVELS, max_length=255, default=Easy)
+    reward_points = models.IntegerField(default=100, null=False, blank=False, verbose_name="Reward points")
     def __unicode__(self):
         return self.title
+
+class TestCase(models.Model):
+    problem = models.ForeignKey(Problem, on_delete=models.CASCADE, verbose_name="Problem")
+    input_sequence = models.TextField(verbose_name="Expected Input")
+    output_sequence = models.TextField(verbose_name="Expected output")
+    score = models.IntegerField()
+    is_sample = models.BooleanField(verbose_name="Sample test case", default=False)
+
+    def __unicode__(self):
+        return str(self.problem.title)
+
+class LiveCode(models.Model):
+    live_user = models.OneToOneField(User)
+    console_data = models.TextField(verbose_name="Code")
+    console_lang = models.ForeignKey(ConsoleLanguage)
