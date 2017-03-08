@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.conf import settings
 from .models import ConsoleLanguage
+from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
 # Create your views here.
 
@@ -13,6 +14,7 @@ def console(request):
 
 
 def runcode(request):
+
     print "Inside runcode"
     # print request.POST["code"]
     API_KEY = settings.HACKERRANK_API

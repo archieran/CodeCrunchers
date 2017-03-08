@@ -46,3 +46,16 @@ class LiveCode(models.Model):
     live_user = models.OneToOneField(User)
     console_data = models.TextField(verbose_name="Code")
     console_lang = models.ForeignKey(ConsoleLanguage)
+
+class Submission(models.Model):
+    sub_made_by = models.ForeignKey(User, verbose_name="Submission by")
+    prob = models.ForeignKey(Problem, verbose_name="Problem")
+    submitted_code = models.TextField(verbose_name="Submitted code")
+    achieved_score = models.IntegerField(verbose_name="Achieved score")
+    total_memory_used = models.IntegerField(verbose_name="Total memory used")
+    total_execution_time = models.IntegerField(verbose_name="Total execution time")
+    lang = models.ForeignKey(ConsoleLanguage)
+    attempted = models.DateTimeField(verbose_name="Attempted")
+
+    def __unicode__(self):
+        return self.prob.title
