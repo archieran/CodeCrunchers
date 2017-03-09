@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 
 import os
 import dj_database_url
+from django.core.mail import send_mail
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -65,7 +66,7 @@ ADMIN_SITE_TITLE = "Administration"
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'www/templates/www/')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -144,7 +145,22 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 HACKERRANK_API = "hackerrank|367089-1178|7da8ea2429c4ee578e2a9632b3b4d6c780448124"
 
+# Login Settings
 LOGIN_REDIRECT_URL = '/'
+
+ACCOUNT_ACTIVATION_DAYS = 7
+
+LOGIN_URL = '/accounts/login/'
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'messiran83@gmail.com'
+EMAIL_HOST_PASSWORD = 'hyutqkeqrsgbzyun'
+SERVER_EMAIL = 'messiran83@gmail.com'
+DEFAULT_FROM_EMAIL = 'DevTest'
 
 # JET_THEMES = [
 #     {
