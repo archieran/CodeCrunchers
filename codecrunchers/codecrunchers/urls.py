@@ -32,6 +32,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^console/', include('codeconsole.urls', 'cc')),
 	url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-    url(r'^login/$', views.login, {'template_name':'login.html', 'authentication_form':LoginForm}, name='login'),
+    url(r'^login/$', views.login, {'template_name':'www/login.html', 'authentication_form':LoginForm}, name='login'),
     url(r'^logout/$', views.logout, {'next_page':'/login'}),
 ]
