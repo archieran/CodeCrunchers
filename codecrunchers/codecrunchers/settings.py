@@ -144,6 +144,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 HACKERRANK_API = "hackerrank|367089-1178|7da8ea2429c4ee578e2a9632b3b4d6c780448124"
 
+LOGIN_REDIRECT_URL = '/'
+
 # JET_THEMES = [
 #     {
 #         'theme': 'default', # theme folder name
