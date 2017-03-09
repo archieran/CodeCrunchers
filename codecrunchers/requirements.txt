@@ -23,3 +23,4 @@ social-auth-core==1.2.0
 uritemplate==3.0.0
 virtualenv==15.1.0
 whitenoise==3.2
+django-registration
