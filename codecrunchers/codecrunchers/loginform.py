@@ -1,7 +1,5 @@
 from django.contrib.auth.forms import AuthenticationForm
 from django import forms
-from django.contrib.auth import login, authenticate
-from django.shortcuts import HttpResponse, render
 
 # Using CSS from Bootstrap
 class LoginForm(AuthenticationForm):
