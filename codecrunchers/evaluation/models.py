@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from codeconsole.models import ConsoleLanguage
+
 # Create your models here.
 class Problem(models.Model):
     Expert = "X"
@@ -40,7 +41,7 @@ class TestCase(models.Model):
     is_sample = models.BooleanField(verbose_name="Sample test case", default=False)
 
     def __unicode__(self):
-        return str(self.problem.title)
+        return str(self.problem) + " TC ID: " +str(self.id)
 
 class LiveCode(models.Model):
     live_user = models.OneToOneField(User)
@@ -48,7 +49,7 @@ class LiveCode(models.Model):
     console_lang = models.ForeignKey(ConsoleLanguage)
 
 class Submission(models.Model):
-    sub_made_by = models.ForeignKey(User, verbose_name="Submission by")
+    sub_made_by = models.ForeignKey(User, verbose_name="User")
     prob = models.ForeignKey(Problem, verbose_name="Problem")
     submitted_code = models.TextField(verbose_name="Submitted code")
     achieved_score = models.IntegerField(verbose_name="Achieved score")
@@ -56,6 +57,7 @@ class Submission(models.Model):
     total_execution_time = models.IntegerField(verbose_name="Total execution time")
     lang = models.ForeignKey(ConsoleLanguage)
     attempted = models.DateTimeField(verbose_name="Attempted")
-
+    class Meta:
+        unique_together = ('sub_made_by', 'prob')
     def __unicode__(self):
-        return self.prob.title
+        return self.prob.title + " by " + self.sub_made_by.username

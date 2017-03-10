@@ -9,6 +9,7 @@ class TestCaseInline(CompactInline):
 
 class SubmissionInline(CompactInline):
     model = Submission
+
 class ProblemAdmin(admin.ModelAdmin):
 
     list_display = ['title', 'difficulty', 'reward_points','start_time', 'end_time', 'is_archived', 'is_active', 'creator']
@@ -27,6 +28,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display = ['sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang']
     list_filter = ['lang__lang']
     search_fields = ['sub_made_by__username', 'prob__title']
+
 admin.site.register(Problem, ProblemAdmin)
 admin.site.register(TestCase, TestcaseAdmin)
 admin.site.register(Submission, SubmissionAdmin)
