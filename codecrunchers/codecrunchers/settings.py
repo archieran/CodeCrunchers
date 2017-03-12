@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'www',
 	'codeconsole',
     'evaluation',
+    'social_django',
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -56,6 +57,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'codecrunchers.urls'
@@ -75,6 +77,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect',
             ],
             'debug': DEBUG,
         },
@@ -161,6 +165,28 @@ EMAIL_HOST_USER = 'messiran83@gmail.com'
 EMAIL_HOST_PASSWORD = 'hyutqkeqrsgbzyun'
 SERVER_EMAIL = 'messiran83@gmail.com'
 DEFAULT_FROM_EMAIL = 'DevTest'
+
+# Socio_Auth Authentication Backends
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.github.GithubOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_LOGIN_ERROR_URL = '/settings/'
+# SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/settings/'
+SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+
+# Socio_Auth Credentials
+SOCIAL_AUTH_FACEBOOK_KEY = '276041826164974'
+SOCIAL_AUTH_FACEBOOK_SECRET = '7f80abc0e5c713211bc873a2c9717e50'
+
+SOCIAL_AUTH_GITHUB_KEY = 'db68e4b0c7bc40e22d63'
+SOCIAL_AUTH_GITHUB_SECRET = '3b3fe6bbe2e89b21bb7214d678f514c7c9056955'
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '123063331696-jt2hp1mg9avccqe81kdcp7gij7gts2bu.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'MNWrlsAUAGQLNUrjOjapCjZf'
 
 # JET_THEMES = [
 #     {
