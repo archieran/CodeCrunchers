@@ -35,7 +35,7 @@ urlpatterns = [
     # url(r'^login/$', views.login, {'template_name':'www/login.html', 'authentication_form':LoginForm}, name='login'),
     # url(r'^logout/$', views.logout, {'next_page':'/login'}),
     url(r'^accounts/', include('registration.backends.hmac.urls')),
-
+    url(r'^profile/$', www.views.profile, name='profile'),
     # Social_Auth
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^settings/$', www.views.settings, name='settings'),

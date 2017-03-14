@@ -27,7 +27,7 @@ def settings(request):
     
     can_disconnect = (user.social_auth.count() > 1 or user.has_usable_password())
     
-    return render(request, 'www/home.html', {
+    return render(request, 'www/settings.html', {
         'github_login': github_login,
         'facebook_login': facebook_login,
         'can_disconnect': can_disconnect
@@ -52,4 +52,7 @@ def password(request):
     else:
         form = PasswordForm(request.user)
     
-    return render(request, 'www/home.html', {form:'form'})
+    return render(request, 'www/password.html', {form:'form'})
+
+def profile(request):
+    return render(request, 'www/profile.html', {})
