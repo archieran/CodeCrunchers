@@ -156,6 +156,8 @@ ACCOUNT_ACTIVATION_DAYS = 7
 
 LOGIN_URL = '/accounts/login/'
 
+LOGOUT_REDIRECT_URL = '/'
+
 # Email Settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
