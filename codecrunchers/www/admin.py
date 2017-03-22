@@ -8,3 +8,10 @@ class ProfileAdmin(admin.ModelAdmin):
     def username(self, instance):
         return instance.user.username
 admin.site.register(Profile, ProfileAdmin)
+
+
+
+
+# class TestCaseResultAdmin(admin.ModelAdmin):
+#     list_display = ['submission','test_case','status']
+# admin.site.register(TestCaseResult, TestCaseResultAdmin)

@@ -5,6 +5,12 @@ from django.contrib.auth.models import User
 from codeconsole.models import ConsoleLanguage
 
 # Create your models here.
+class Topic(models.Model):
+    topic_name = models.CharField(max_length = 255, verbose_name = "Topic")
+
+    def __unicode__(self):
+        return self.topic_name
+
 class Problem(models.Model):
     Expert = "X"
     Hard = "H"
@@ -16,6 +22,7 @@ class Problem(models.Model):
         (Hard, "Hard"),
         (Expert, "Expert"),
     )
+    topic = models.ForeignKey(Topic, on_delete=None, null=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Problem creator")
     title = models.CharField(max_length=255, null=False, blank=False, verbose_name="Title")
     desc = models.CharField(max_length=65535, null=False, blank=False, verbose_name="Description")
@@ -61,3 +68,17 @@ class Submission(models.Model):
         unique_together = ('sub_made_by', 'prob')
     def __unicode__(self):
         return self.prob.title + " by " + self.sub_made_by.username
+
+class TestCaseResult(models.Model):
+    PASS = "P"
+    FAIL = "F"
+    STATUS_CHOICES = (
+        (PASS, "PASS"),
+        (FAIL, "FAIL"),
+    )
+    submission = models.ForeignKey(Submission, verbose_name="Submission")
+    test_case = models.ForeignKey(TestCase, verbose_name="Test_Case")
+    status = models.CharField(choices=STATUS_CHOICES, verbose_name="Status", max_length=1, default=FAIL)
+
+    class Meta:
+        unique_together = ['submission', 'test_case']
