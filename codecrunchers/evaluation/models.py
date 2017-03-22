@@ -22,7 +22,7 @@ class Problem(models.Model):
         (Hard, "Hard"),
         (Expert, "Expert"),
     )
-    topic = models.ForeignKey(Topic, on_delete=None, null=True)
+    topic_name = models.ForeignKey(Topic, on_delete=None, null=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Problem creator")
     title = models.CharField(max_length=255, null=False, blank=False, verbose_name="Title")
     desc = models.CharField(max_length=65535, null=False, blank=False, verbose_name="Description")
