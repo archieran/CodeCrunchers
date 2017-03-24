@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import login_required
 def console(request):
     context = {}
     context["languages"] = ConsoleLanguage.objects.filter(is_active=True)
+    context["active_tab"] = 'console'
     return render(request, 'codeconsole/console.html', context)
 
 

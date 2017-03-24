@@ -55,4 +55,7 @@ def password(request):
     return render(request, 'www/password.html', {form:'form'})
 
 def profile(request):
-    return render(request, 'www/profile.html', {})
+    context = {
+        'active_tab':'profile'
+    }
+    return render(request, 'www/profile.html',context)
