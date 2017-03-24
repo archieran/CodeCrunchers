@@ -22,7 +22,7 @@ class Problem(models.Model):
         (Hard, "Hard"),
         (Expert, "Expert"),
     )
-    top = models.ForeignKey(Topic, on_delete=None, null=True)
+    topic = models.ForeignKey(Topic, on_delete=None, null=True)
     creator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Problem creator")
     title = models.CharField(max_length=255, null=False, blank=False, verbose_name="Title")
     desc = models.CharField(max_length=65535, null=False, blank=False, verbose_name="Description")
@@ -39,6 +39,8 @@ class Problem(models.Model):
     reward_points = models.IntegerField(default=100, null=False, blank=False, verbose_name="Reward points")
     def __unicode__(self):
         return self.title
+    def get_difficulty_verbose(self):
+        return dict(self.PROB_DIFFICULTY_LEVELS).get(self.difficulty)
 
 class TestCase(models.Model):
     problem = models.ForeignKey(Problem, on_delete=models.CASCADE, verbose_name="Problem")

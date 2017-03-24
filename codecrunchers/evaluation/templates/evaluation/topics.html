@@ -1,0 +1,9 @@
+{% extends 'www/base.html' %}
+
+{% block content %}
+        <h1>Topics</h1>
+        {% for topic in topics %}
+            <a href="{% url 'ev:topic_probs' topic.id %}" class="btn btn-primary" >{{topic.topic_name}}</a>
+        {% endfor %}
+
+{% endblock %}

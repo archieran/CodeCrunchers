@@ -1,0 +1,14 @@
+{% extends 'www/base.html' %}
+
+{% block content %}
+    <h1>{{challenge.title}} {{challenge.get_difficulty_verbose}} <small>{{challenge.reward_points}}</small></h1>
+    <h2>{{challenge.creator}}</h2>
+    <p>{{challenge.desc}}</p>
+    <p>{{challenge.input_format}}</p>
+    <p>{{challenge.output_format}}</p>
+    <p>{{challenge.constraints}}</p>
+    <p>{{challenge.start_time}} to {{challenge.end_time}}</p>
+
+    <textarea rows=5 cols=50>{{challenge.startup_code}}</textarea>
+
+{% endblock %}

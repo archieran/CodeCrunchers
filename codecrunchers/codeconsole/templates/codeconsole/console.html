@@ -162,7 +162,7 @@
             });
         });
     </script>
-    <script>
+    <!--<script>
         var editor = ace.edit("output");
         $('#clipboard').on('click', function () {
             var sel = editor.selection.toJSON(); // save selection
@@ -171,5 +171,5 @@
             document.execCommand('copy');
             editor.selection.fromJSON(sel); // restore selection
         });
-    </script>
+    </script>-->
 {% endblock %}
