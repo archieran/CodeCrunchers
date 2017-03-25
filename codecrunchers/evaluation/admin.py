@@ -15,13 +15,13 @@ class ProblemInline(CompactInline):
     
 class ProblemAdmin(admin.ModelAdmin):
 
-    list_display = ['title', 'difficulty', 'reward_points','start_time', 'end_time', 'is_archived', 'is_active', 'creator']
+    list_display = ['title', 'difficulty', 'reward_points','start_time', 'end_time', 'is_practice', 'is_active', 'creator']
     #To show Test cases tab inside problem
     inlines = [
         TestCaseInline,
         SubmissionInline,
     ]
-    list_filter = ['difficulty', 'is_active', 'is_archived']
+    list_filter = ['difficulty', 'is_active', 'is_practice']
     search_fields = ['title','creator__username']
 
 class TestcaseAdmin(admin.ModelAdmin):

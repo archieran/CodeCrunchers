@@ -31,3 +31,12 @@ def evaluate(request, prob_id):
     }
     print context
     return render(request, 'evaluation/solve.html', context)
+
+def practice_home(request):
+    problems = Problem.objects.select_related().filter(is_practice = True)
+    print problems
+    context = {
+        'active_tab':'prac_home',
+        'problems':problems
+    }
+    return render(request, 'evaluation/practice_home.html', context)

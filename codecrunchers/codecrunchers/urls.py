@@ -41,4 +41,5 @@ urlpatterns = [
     url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^settings/$', www.views.settings, name='settings'),
     url(r'^settings/password/$', www.views.password, name='password'),
+    url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
 ]

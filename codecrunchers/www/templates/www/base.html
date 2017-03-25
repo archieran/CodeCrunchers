@@ -21,7 +21,95 @@
     <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
 
     <style type="text/css">
+        #prof-pic {
+            border-radius: 50%;
+            border: 3px solid white;
+        }
 
+        .profile-sidebar center {
+        {#            background-color: #E3ECF2;#}
+            background-color: #6fc3df;
+            z-index: 999;
+        }
+
+        {#Copied code from somewhere and edited  for profile image hover animation#}
+        * {
+            -moz-box-sizing: border-box;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        .profile-sidebar center {
+            position: relative;
+            margin: 2%;
+            overflow: hidden;
+        }
+
+        .profile-sidebar center {
+            max-width: 100%;
+
+            -moz-transition: all 0.3s;
+            -webkit-transition: all 0.3s;
+            transition: all 2s;
+        }
+
+        .profile-sidebar center:hover img {
+            -moz-transform: scale(1.1);
+            -webkit-transform: scale(1.1);
+            transform: scale(2);
+            transition-duration: 2s;
+        }
+
+        {#End of copied code from somewhere for profile image hover animation#}
+        {#  Copied code for arrow scroll to top      #}
+        {#     Scroll to top taken from here   https://codepen.io/rdallaire/pen/apoyx#}
+        #return-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgb(0, 0, 0);
+            background: rgba(0, 0, 0, 0.7);
+            width: 50px;
+            height: 50px;
+            display: block;
+            text-decoration: none;
+            -webkit-border-radius: 35px;
+            -moz-border-radius: 35px;
+            border-radius: 35px;
+            display: none;
+            -webkit-transition: all 0.3s linear;
+            -moz-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        #return-to-top i {
+            color: #fff;
+            margin: 0;
+            position: relative;
+            left: 16px;
+            top: 13px;
+            font-size: 19px;
+            -webkit-transition: all 0.3s ease;
+            -moz-transition: all 0.3s ease;
+            -ms-transition: all 0.3s ease;
+            -o-transition: all 0.3s ease;
+            transition: all 0.3s ease;
+        }
+
+        #return-to-top:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+
+        #return-to-top:hover i {
+            color: #fff;
+            top: 5px;
+        }
+
+        {#        End of copied code for scroll to top#}
     </style>
 
 </head>
@@ -30,7 +118,9 @@
     <div class="row profile">
         <div class="col-md-3 col-lg-3 col-sm-6 col-xs-12">
             <div class="profile-sidebar">
-
+                <center>
+                    <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100" id="prof-pic"/>
+                </center>
                 <!-- END SIDEBAR USERPIC -->
                 <!-- SIDEBAR USER TITLE -->
                 <div class="profile-usertitle">
@@ -45,9 +135,8 @@
                         <span id="compName"></span>
                     </div>
                     <div>
-                        <a href="../investorwallet.aspx">
-                            <i class="fa fa-bank"></i>
-                            Points </a>
+                        <i class="fa fa-trophy fa-2x"></i>
+                        Experience Points {{ user.profile.experience_points }}
                     </div>
                 </div>
                 <!-- END SIDEBAR USER TITLE -->
@@ -55,7 +144,7 @@
                 <!-- SIDEBAR MENU -->
                 <div class="profile-usermenu">
                     <ul class="nav">
-                        <li  class="{% if active_tab == 'profile' %}active{% endif %}">
+                        <li class="{% if active_tab == 'profile' %}active{% endif %}">
                             <a href="{% url 'profile' %}">
                                 <i class="glyphicon glyphicon-user"></i>
                                 Profile </a>
@@ -66,15 +155,15 @@
                                 Leaderboard</a>
                         </li>
 
-                        <li  class="{% if active_tab == 'problems' %}active{% endif %}">
+                        <li class="{% if active_tab == 'problems' %}active{% endif %}">
                             <a href="{% url 'ev:evhome' %}">
-                                <i class="glyphicon glyphicon-stats"></i>
+                                <i class="fa fa-code"></i>
                                 Problems</a>
                         </li>
 
-                        <li>
-                            <a href="investorideas.aspx">
-                                <i class="glyphicon glyphicon-record fa-spin"></i>
+                        <li class="{% if active_tab == 'prac_home' %}active{% endif %}">
+                            <a href="{% url 'ev:prac_home' %}">
+                                <i class="fa fa-folder"></i>
                                 Practice</a>
                         </li>
 
@@ -87,6 +176,7 @@
                             <a href="{% url 'auth_logout' %}">
                                 <i class="glyphicon glyphicon-log-out"></i>
                                 Sign Out</a>
+
                         </li>
                     </ul>
                 </div>
@@ -100,19 +190,35 @@
         {% block content %}
         {% endblock %}
     </div>
+
+    <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
 </div>
 
 <script>
-{#    $(document).ready(function () {#}
-{#        $("li").hover(function () {#}
-{#            $(this).addClass("active");#}
-{#        }, function () {#}
-{#            $(this).removeClass("active");#}
-{#        })#}
-{#    });#}
-{#    $("li").click(function () {#}
-{#        $(this).addClass("active");#}
-{#    });#}
+    {#    $(document).ready(function () {#}
+    {#        $("li").hover(function () {#}
+    {#            $(this).addClass("active");#}
+    {#        }, function () {#}
+    {#            $(this).removeClass("active");#}
+    {#        })#}
+    {#    });#}
+    {#    $("li").click(function () {#}
+    {#        $(this).addClass("active");#}
+    {#    });#}
+    {#     ===== Scroll to Top ====#}
+    $(window).scroll(function () {
+        if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+            $('#return-to-top').fadeIn(200);    // Fade in the arrow
+        } else {
+            $('#return-to-top').fadeOut(200);   // Else fade out the arrow
+        }
+    });
+    $('#return-to-top').click(function () {      // When arrow is clicked
+        $('body,html').animate({
+            scrollTop: 0                       // Scroll to top of body
+        }, 500);
+    });
+    {#     ===== Scroll to Top Ends====#}
 </script>
 </body>
 </html>

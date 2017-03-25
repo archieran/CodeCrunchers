@@ -33,7 +33,7 @@ class Problem(models.Model):
     startup_code = models.CharField(max_length=65535, verbose_name="Initial code")
     start_time = models.DateTimeField(verbose_name="Problem start time")
     end_time = models.DateTimeField(verbose_name="Problem end time")
-    is_archived = models.BooleanField(default=False, verbose_name="Archived")
+    is_practice = models.BooleanField(default=False, verbose_name="Practice Problem")
     is_active = models.BooleanField(default=True, verbose_name="Active")
     difficulty = models.CharField(choices=PROB_DIFFICULTY_LEVELS, max_length=255, default=Easy)
     reward_points = models.IntegerField(default=100, null=False, blank=False, verbose_name="Reward points")
