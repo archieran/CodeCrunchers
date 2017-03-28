@@ -1,14 +1,150 @@
 {% extends 'www/base.html' %}
 
 {% block content %}
-    <h1>{{challenge.title}} {{challenge.get_difficulty_verbose}} <small>{{challenge.reward_points}}</small></h1>
-    <h2>{{challenge.creator}}</h2>
-    <p>{{challenge.desc}}</p>
-    <p>{{challenge.input_format}}</p>
-    <p>{{challenge.output_format}}</p>
-    <p>{{challenge.constraints}}</p>
-    <p>{{challenge.start_time}} to {{challenge.end_time}}</p>
+    {% load staticfiles %}
+    <script src="{% static 'ace/src-min/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+    <style type="text/css" media="screen">
 
-    <textarea rows=5 cols=50>{{challenge.startup_code}}</textarea>
+        #editor {
+            margin-top: 10px;
+            visibility: visible;
+            width: 100%;
+            height: 280px;
+        }
 
+        #output {
+            margin-top: 10px;
+            visibility: visible;
+            width: 100%;
+            height: 340px;
+            margin-bottom: 10px;
+        }
+    </style>
+    <div class="col col-lg-9 col-md-9 col-sm-6 col-xs-12">
+        <h2>{{ challenge.title }}
+            <small> by <u>{{ challenge.creator.first_name }} {{ challenge.creator.last_name }}</u> in</small>
+            <a href="{% url 'ev:topic_probs' challenge.topic.id %}"
+               class="btn btn-default">{{ challenge.topic }}</a>
+        </h2>
+        <h5>Experience Points: {{ challenge.reward_points }}</h5>
+
+        <div>Description:<p class="text-primary text-justify">{{ challenge.desc }}</p>
+        </div>
+        <div>Constraints:<p class="text-danger text-justify">{{ challenge.constraints }}</p>
+        </div>
+        Input Format:
+        <div class="well">
+
+            {{ challenge.input_format | linebreaks }}
+        </div>
+        Output Format:
+        <div class="well">
+
+            {{ challenge.output_format | linebreaks }}
+        </div>
+        <div class="form-group pull-right">
+            <select class="form-control d-inline-block" id="lang">
+                {% for lang_ob in languages %}
+                    <option>{{ lang_ob.lang }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div id="editor">print("Hello")</div>
+        <br>
+        <i id="loader" class="fa fa-circle-o-notch fa-spin pull-right fa-2x" aria-hidden="true"></i>
+        <button class="btn btn-primary pull-left compilebutons" id="btnRun">Run
+        </button>
+        <button class="btn btn-success pull-right compilebutons" id="btnSubmit">Submit
+        </button>
+
+    </div>
+
+    <script>
+        {#   Initialize the editor     #}
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/cobalt");
+        editor.getSession().setTabSize(4);
+        editor.getSession().setMode("ace/mode/python");
+        document.getElementById('editor').style.fontSize = '15px';
+        editor.getSession().setUseWrapMode(true);
+        editor.setShowPrintMargin(false);
+
+        {#   for the output window   #}
+
+
+        {#  end of output window  #}
+
+
+        {#    End of editor initialization    #}
+
+        {#    #}
+        $(document).ready(function () {
+            $("#loader").hide();
+            $("#btnRun").click(function () {
+                $("#loader").show();
+                $(".compilebutons").hide();
+                var prob_id = {{ challenge.id }};
+                var code = editor.session.getValue();
+                var lang = $('#lang').find(":selected").text();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'ev:run_testcases' %}",
+                    data: {
+                        "code": code,
+                        "lang": lang,
+                        "prob_id":prob_id,
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        $('#btnSubmit').show();
+                        $('#btnRun').show();
+                        $('#loader').hide();
+                    },
+                    error: function () {
+                        output.setValue("Error:\n");
+                        console.log("Error");
+                        output.clearSelection();
+                        $('#btnCompile').show();
+                        $('#loader').hide();
+                    },
+
+                });
+            });
+
+            $("#btnSubmit").click(function () {
+                $("#loader").show();
+                $(".compilebutons").hide();
+            });
+
+            {#        Code to change console highlighting    #}
+            $('#lang').on('change', function (e) {
+                var editor = ace.edit('editor');
+                var lang = $('#lang').find(":selected").text();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cc:get_ace_name' %}",
+                    data: {
+                        "lang": lang,
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        lang = data;
+                        editor.getSession().setMode("ace/mode/" + lang);
+                    },
+                    error: function (data) {
+                        console.log("Error");
+                        console.log(data);
+
+                    },
+
+                });
+            });
+            {#      End of language switch      #}
+
+        });
+    </script>
 {% endblock %}

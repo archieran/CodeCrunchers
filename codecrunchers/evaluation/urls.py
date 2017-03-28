@@ -9,5 +9,6 @@ urlpatterns = [
     url(r'^(?P<prob_id>[0-9]+)/$', views.evaluate, name='evcode'),
     url(r'^topic/(?P<topic_var>[0-9]+)/$', views.topic_problems, name='topic_probs'),
     url(r'^practice/$', views.practice_home, name='prac_home'),
+    url(r'run_testcases/$', views.run_testcases, name='run_testcases'),
 
 ]

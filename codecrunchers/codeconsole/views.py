@@ -31,7 +31,7 @@ def runcode(request):
                            'testcases': [userinp]
                            })
     # Make no changes to below code, please !
-
+    print source_code
     msg = result.message
     outputs = result.output
     error = result.error
