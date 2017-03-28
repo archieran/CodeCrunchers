@@ -20,7 +20,7 @@
             margin-bottom: 10px;
         }
     </style>
-    <div class="col col-lg-9 col-md-9 col-sm-6 col-xs-12">
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
         <h2>{{ challenge.title }}
             <small> by <u>{{ challenge.creator.first_name }} {{ challenge.creator.last_name }}</u> in</small>
             <a href="{% url 'ev:topic_probs' challenge.topic.id %}"
@@ -56,7 +56,6 @@
         </button>
         <button class="btn btn-success pull-right compilebutons" id="btnSubmit">Submit
         </button>
-
     </div>
 
     <script>
@@ -92,7 +91,7 @@
                     data: {
                         "code": code,
                         "lang": lang,
-                        "prob_id":prob_id,
+                        "prob_id": prob_id,
                         "csrfmiddlewaretoken": "{{csrf_token}}",
                     },
                     success: function (data) {
