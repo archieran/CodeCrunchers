@@ -52,6 +52,7 @@ def practice_home(request):
 
 
 def run_testcases(request):
+    #code runs just fine, make sure that there is atleast one sample test cases to not let this view blow up
     API_KEY = settings.HACKERRANK_API
     source_code = request.POST.get("code")
     compiler = HackerRankAPI(API_KEY)
@@ -63,9 +64,10 @@ def run_testcases(request):
     inputsequences = list()
     outputsequences = list()
     for case in cases_list:
-        inputsequences.append(case.input_sequence)
-        outputsequences.append(case.output_sequence)
+        inputsequences.append(str(case.input_sequence).replace('\r', ''))
+        outputsequences.append(str(case.output_sequence.replace('\r', '')))
     print inputsequences
+    print outputsequences
     result = compiler.run(
         {'source': source_code,
          'lang': lang,
@@ -76,7 +78,11 @@ def run_testcases(request):
     actualoutputs = list()
     data = dict()
     output = list()
-
+    msg = result.message
+    error = result.error
+    print msg
+    print error
+    print result.output
     for res in result.output:
         data["id"] = i
         data["input"] = inputsequences[i].strip()
