@@ -1,7 +1,6 @@
 from django.contrib import admin
-from .models import Problem, TestCase, Submission
+from .models import Problem, TestCase, Submission, Topic, Contest
 from jet.admin import CompactInline
-from .models import Topic
 # Register your models here.
 
 class TestCaseInline(CompactInline):
@@ -38,7 +37,13 @@ class TopicAdmin(admin.ModelAdmin):
         ProblemInline
     ]
 
+class ContestAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title','description','creator','start_time','end_time','is_active']
+    list_filter = ['creator','is_active']
+    search_fields = ['creator','title','description']
+
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Problem, ProblemAdmin)
 admin.site.register(TestCase, TestcaseAdmin)
 admin.site.register(Submission, SubmissionAdmin)
+admin.site.register(Contest, ContestAdmin)

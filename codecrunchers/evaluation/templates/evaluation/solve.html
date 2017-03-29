@@ -115,6 +115,33 @@
             $("#btnSubmit").click(function () {
                 $("#loader").show();
                 $(".compilebutons").hide();
+                var prob_id = {{ challenge.id }};
+                var code = editor.session.getValue();
+                var lang = $('#lang').find(":selected").text();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'ev:run_submission' %}",
+                    data: {
+                        "code": code,
+                        "lang": lang,
+                        "prob_id": prob_id,
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        $('#btnSubmit').show();
+                        $('#btnRun').show();
+                        $('#loader').hide();
+                    },
+                    error: function () {
+                        console.log("Error");
+                        $('.compilebutons').show();
+                        $('#loader').hide();
+                    },
+
+                });
+
             });
 
             {#        Code to change console highlighting    #}

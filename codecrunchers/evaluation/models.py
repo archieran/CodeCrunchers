@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.auth.models import User
 from codeconsole.models import ConsoleLanguage
+from django.utils import timezone
 
 # Create your models here.
 class Topic(models.Model):
@@ -10,6 +11,17 @@ class Topic(models.Model):
 
     def __unicode__(self):
         return self.topic_name
+
+class Contest(models.Model):
+    title = models.CharField(max_length=255, verbose_name="Contest title")
+    description = models.TextField(verbose_name="Description")
+    creator = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Contest Creator")
+    start_time = models.DateTimeField(verbose_name="Start time")
+    end_time = models.DateTimeField(verbose_name="End time")
+    is_active = models.BooleanField(default=False, verbose_name="Active")
+
+    def __str__(self):
+        return self.title
 
 class Problem(models.Model):
     Expert = "X"
@@ -37,6 +49,7 @@ class Problem(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Active")
     difficulty = models.CharField(choices=PROB_DIFFICULTY_LEVELS, max_length=255, default=Easy)
     reward_points = models.IntegerField(default=100, null=False, blank=False, verbose_name="Reward points")
+    contest = models.ManyToManyField(Contest, blank=True)
     def __unicode__(self):
         return self.title
     def get_difficulty_verbose(self):
@@ -63,11 +76,11 @@ class Submission(models.Model):
     submitted_code = models.TextField(verbose_name="Submitted code")
     achieved_score = models.IntegerField(verbose_name="Achieved score")
     total_memory_used = models.IntegerField(verbose_name="Total memory used")
-    total_execution_time = models.IntegerField(verbose_name="Total execution time")
+    total_execution_time = models.FloatField(verbose_name="Total execution time")
     lang = models.ForeignKey(ConsoleLanguage)
     attempted = models.DateTimeField(verbose_name="Attempted")
-    class Meta:
-        unique_together = ('sub_made_by', 'prob')
+    # class Meta:
+    #     unique_together = ('sub_made_by', 'prob')
     def __unicode__(self):
         return self.prob.title + " by " + self.sub_made_by.username
 
@@ -81,6 +94,8 @@ class TestCaseResult(models.Model):
     submission = models.ForeignKey(Submission, verbose_name="Submission")
     test_case = models.ForeignKey(TestCase, verbose_name="Test_Case")
     status = models.CharField(choices=STATUS_CHOICES, verbose_name="Status", max_length=1, default=FAIL)
+    time_submitted = models.DateTimeField(verbose_name="Time_Stamp", default=timezone.now)
 
-    class Meta:
-        unique_together = ['submission', 'test_case']
+    # class Meta:
+       # unique_together = ['submission', 'test_case']
+
