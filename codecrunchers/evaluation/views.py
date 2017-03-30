@@ -181,9 +181,11 @@ def run_submission(request):
 
         output.append(data)
         data = dict()
-    print achieved_score
+    print "Achieved Score: %d" % achieved_score
 
-    scaled_marks = (achieved_score * 100 )/max_score
+    max_reward_points = Problem.objects.values('reward_points').filter(id=prob_id)[0]['reward_points']
+    print "Max Reward %d" % max_reward_points
+    scaled_marks = (achieved_score * max_reward_points )/max_score
     sub.achieved_score = int(scaled_marks)
 
     print "Max Score   : %f" % max_score
@@ -191,12 +193,13 @@ def run_submission(request):
 
     # Logic for XP Calculation
     current_xp = user.profile.experience_points
-    print current_xp
+    print "Current XP : %d" % current_xp
     previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+    print "Previous Score: %d" % previous_max_score
 
-    if previous_max_score < achieved_score:
+    if previous_max_score < scaled_marks:
         sub.sub_made_by.profile.experience_points = (current_xp - previous_max_score) + scaled_marks
-        print "XP : %d" % sub.sub_made_by.profile.experience_points
+        print "New XP : %d" % sub.sub_made_by.profile.experience_points
         sub.sub_made_by.profile.save()
 
     sub.save()
