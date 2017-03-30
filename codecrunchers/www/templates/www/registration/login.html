@@ -1,7 +1,18 @@
-{% extends 'www/base.html' %}
+{% extends 'www/accounts_base.html' %}
 
 
 {% block content %}
+    <style>
+        a:hover {
+            text-decoration:none;
+        }
+    .fa-2x:hover{
+        background-color: #6fc3df;
+    }
+    img{
+        border-radius: 50%;
+    }
+    </style>
     {% if form.errors %}
 
         <p>Your username and password didn't match. Please try again.</p>
@@ -20,15 +31,15 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="col-sm-6 col-sm-offset-3 col-md-4 col-md-offset-4 col-xs-12">
                 <div class="login-panel panel panel-default">
                     <div class="panel-heading">
-                        <h3 class="panel-title">Please Sign In</h3>
+                        <h3 class="panel-title">Sign In to CodeCrunchers</h3>
                     </div>
                     <div class="panel-body">
                         <form method="post" action=".">
                             {% csrf_token %}
-
+                            <center><img src="https://home.questionbig.com/images/avatar_blank.png" width="100" height="100"/></center>
                             <p class="bs-component">
                             <table>
                                 <tr>
@@ -46,9 +57,10 @@
                                 <input class="btn btn-success btn-sm" type="submit" value="login"/>
                             </center>
                             </p>
-                            <a href="{% url 'social:begin' 'github' %}">Login with GitHub</a><br>
-                            <a href="{% url 'social:begin' 'google-oauth2' %}">Login with Google</a><br>
-                            <a href="{% url 'social:begin' 'facebook' %}">Login with Facebook</a>
+                            <span class="text-success h3">Social auth</span>
+                            <a href="{% url 'social:begin' 'github' %}" class="fa fa-github fa-3x pull-right"></a>
+                            <a href="{% url 'social:begin' 'google-oauth2' %}" class="fa fa-google fa-3x pull-right"></a>
+                            <a href="{% url 'social:begin' 'facebook' %}" class="fa fa-facebook fa-3x pull-right"></a>
                             <input type="hidden" name="next" value="{{ next }}"/>
                         </form>
                     </div>

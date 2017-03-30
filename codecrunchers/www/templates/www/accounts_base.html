@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+    <title>Code crunchers</title>
+    {#Bootstrap4 css#}
+    {#    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>#}
+
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
+
+    {# Font-awesome   #}
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    {#JQuery#}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    {#IntercoolerJS - AJAX on Steroids #}
+    <script src="http://cdn.intercoolerjs.org/intercooler-1.1.0.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
+    </head>
+<body>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

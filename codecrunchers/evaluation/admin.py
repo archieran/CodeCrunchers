@@ -25,14 +25,17 @@ class ProblemAdmin(admin.ModelAdmin):
 
 class TestcaseAdmin(admin.ModelAdmin):
     list_display = ['id', 'problem','input_sequence', 'output_sequence' ,'score', 'is_sample']
+    list_filter = ['is_sample']
+    search_fields = ['problem__title']
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ['sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang']
+    list_display = ['sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang', 'attempted']
     list_filter = ['lang__lang']
     search_fields = ['sub_made_by__username', 'prob__title']
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['topic_name']
+    search_fields = ['topic_name']
     inlines = [
         ProblemInline
     ]
