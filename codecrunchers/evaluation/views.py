@@ -160,6 +160,7 @@ def run_submission(request):
         output.append(data)
         data = dict()
     print achieved_score
+    
     sub.achieved_score = achieved_score
     if achieved_score == max_score:
         # marks = Submission.objects.filter(achieved_score = achieved_score, prob_id = prob_id)
