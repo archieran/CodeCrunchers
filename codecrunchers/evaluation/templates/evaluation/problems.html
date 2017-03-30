@@ -1,8 +1,22 @@
 {% extends 'www/base.html' %}
 
 {% block content %}
-    <h1>Problems</h1>
-    {% for problem in problems %}
-        <a href="{% url 'ev:evcode' problem.id %}" class="btn btn-primary">{{problem.title}}</a>
-    {% endfor %}
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
+        <h1>Topic : {{ topic }}</h1>
+        <table class="table table-hover table-responsive panel">
+            <th class="panel-title">Problem</th>
+            <th class="panel-title">Diffuculty</th>
+            <th class="panel-title">Points</th>
+            <th></th>
+            {% for problem in problems %}
+                <tr>
+                    <td>{{ problem.title }}</td>
+                    <td>{{ problem.get_difficulty_verbose }}</td>
+                    <td>{{ problem.reward_points }}</td>
+                    <td class="text-right"><a href="{% url 'ev:evcode' problem.id %}" class="btn btn-primary">Solve</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

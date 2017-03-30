@@ -3,4 +3,5 @@ from .models import ConsoleLanguage
 # Register your models here.
 class ConsoleAdmin(admin.ModelAdmin):
     list_display = ['lang', 'is_active']
+    list_filter = ['is_active']
 admin.site.register(ConsoleLanguage, ConsoleAdmin)

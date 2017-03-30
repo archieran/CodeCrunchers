@@ -21,15 +21,20 @@
     <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
 
     <style type="text/css">
+        body {
+            #background-color: #8BCBDE;
+            background-color: #87E8C6;
+            #background-color: #158B93;
+        }
+
         #prof-pic {
             border-radius: 50%;
             border: 3px solid white;
         }
 
         .profile-sidebar center {
-        {#            background-color: #E3ECF2;#}
-            background-color: #6fc3df;
-            z-index: 999;
+        {#            background-color: #E3ECF2;#} #background-color: #64DDBB;
+            background-color: #66CC99;
         }
 
         {#Copied code from somewhere and edited  for profile image hover animation#}
@@ -60,7 +65,7 @@
             transition-duration: 2s;
         }
 
-        .profile-sidebar center:hover img {
+        .profile-sidebar center img:hover {
             -moz-transform: scale(1.1);
             -webkit-transform: scale(1.1);
             transform: scale(2);
@@ -124,7 +129,14 @@
         <div class="col-md-3 col-lg-3 col-sm-4 col-xs-12">
             <div class="profile-sidebar">
                 <center>
-                    <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100" id="prof-pic"/>
+                    {% ifequal "profileimages/anonymous.jpg" user.profile.user_avatar %}
+                        <img src="https://home.questionbig.com/images/avatar_blank.png" height="100" width="100"
+                             id="prof-pic"/>
+                    {% else %}
+                        <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100"
+                             id="prof-pic"/>
+
+                    {% endifequal %}
                 </center>
                 <!-- END SIDEBAR USERPIC -->
                 <!-- SIDEBAR USER TITLE -->
@@ -173,10 +185,17 @@
                         </li>
 
                         <li class="{% if active_tab == 'console' %}active{% endif %}">
-                            <a href="{% url 'cc:console' %}">
+                            <a href="{% url 'cc:console' %}" target="_blank">
                                 <i class="fa fa-terminal" aria-hidden="true"></i>
                                 Console</a>
                         </li>
+                        {% if user.is_staff %}
+                            <li>
+                                <a href="/admin" target="_blank">
+                                    <i class="fa fa-users" aria-hidden="true"></i>
+                                    Admin</a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="{% url 'auth_logout' %}">
                                 <i class="glyphicon glyphicon-log-out"></i>

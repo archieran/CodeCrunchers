@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Problem, TestCase, Submission, Topic, Contest
+from .models import Problem, TestCase, Submission, Topic, Contest, TestCaseResult
 from jet.admin import CompactInline
 # Register your models here.
 
@@ -44,9 +44,11 @@ class ContestAdmin(admin.ModelAdmin):
     list_display = ['id', 'title','description','creator','start_time','end_time','is_active']
     list_filter = ['creator','is_active']
     search_fields = ['creator','title','description']
-
+class TestCaseResultAdmin(admin.ModelAdmin):
+    list_display = ['id', 'submission','test_case','time_submitted','status']
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Problem, ProblemAdmin)
 admin.site.register(TestCase, TestcaseAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Contest, ContestAdmin)
+admin.site.register(TestCaseResult, TestCaseResultAdmin)

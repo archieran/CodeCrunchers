@@ -4,7 +4,8 @@ from .models import Profile
 from django.contrib.auth.models import User
 # Register your models here.
 class ProfileAdmin(admin.ModelAdmin):
-    list_display = ['username', 'user_type']
+    list_display = ['username', 'user_type', 'experience_points', 'user_avatar']
+    list_filter = ['user_type']
     def username(self, instance):
         return instance.user.username
 admin.site.register(Profile, ProfileAdmin)

@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import Http404
 from django.conf import settings
-from .models import Topic, Problem, ConsoleLanguage, Submission
+from .models import Topic, Problem, ConsoleLanguage, Submission, TestCaseResult
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.utils import timezone
 from .models import TestCase
@@ -22,11 +22,15 @@ def evaluationhome(request):
 
 
 def topic_problems(request, topic_var):
-    probs = Problem.objects.select_related().filter(topic_id=topic_var)
-    context = {
-        'problems': probs,
-        'active_tab': 'problems'
-    }
+    try:
+        probs = Problem.objects.select_related().filter(topic_id=topic_var)
+        context = {
+            'problems': probs,
+            'active_tab': 'problems',
+            'topic':Topic.objects.get(id=topic_var).topic_name,
+        }
+    except:
+        raise Http404
     return render(request, 'evaluation/problems.html', context)
 
 
@@ -149,16 +153,32 @@ def run_submission(request):
     sub.total_memory_used = total_memory
     achieved_score = 0
     max_score = 0
+
     for res in result.output:
+        tcresult = TestCaseResult()
         data["id"] = i
         data["input"] = inputsequences[i].strip()
         data["expectedoutput"] = outputsequences[i].strip()
         data["actualoutput"] = res.strip()
         data["status"] = data["actualoutput"] == data["expectedoutput"]
+        data["memory"] = result.memory[i]
+        data["time"] = result.time[i]
         max_score = max_score + case_marks[i]
+        sub.achieved_score = 0
+        sub.save()
+        tcresult.submission = sub
+        if data["status"]:
+            tcresult.status = "P"
+        else:
+            tcresult.status = "F"
+        tcresult.time_submitted = timezone.now()
+        tcresult.test_case = cases[i]
+        print tcresult
+        tcresult.save()
         if data["status"]:
             achieved_score = achieved_score + case_marks[i]
         i=i+1
+
         output.append(data)
         data = dict()
     print achieved_score
