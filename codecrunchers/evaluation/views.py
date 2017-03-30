@@ -7,8 +7,10 @@ from hackerrank.HackerRankAPI import HackerRankAPI
 from django.utils import timezone
 from .models import TestCase
 from django.contrib.auth.models import User
+from django.db.models import Max, Aggregate, IntegerField
 import json
 
+# Begin Coding from here
 
 def evaluationhome(request):
     topics = Topic.objects.all()
@@ -160,18 +162,28 @@ def run_submission(request):
         output.append(data)
         data = dict()
     print achieved_score
-    
-    sub.achieved_score = achieved_score
-    if achieved_score == max_score:
-        # marks = Submission.objects.filter(achieved_score = achieved_score, prob_id = prob_id)
-        cur_points = sub.sub_made_by.profile.experience_points
-        sub.sub_made_by.profile.experience_points = cur_points + sub.prob.reward_points
+
+    scaled_marks = (achieved_score * 100 )/max_score
+    sub.achieved_score = int(scaled_marks)
+
+    print "Max Score   : %f" % max_score
+    print "Scaled Score: %f" % scaled_marks
+
+    # Logic for XP Calculation
+    current_xp = user.profile.experience_points
+    print current_xp
+    previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+
+    if previous_max_score < achieved_score:
+        sub.sub_made_by.profile.experience_points = (current_xp - previous_max_score) + scaled_marks
+        print "XP : %d" % sub.sub_made_by.profile.experience_points
         sub.sub_made_by.profile.save()
+
     sub.save()
-    print max_score
     js = json.dumps(output)
     print js
     print prob_id
     print lang
     print source_code
+
     return HttpResponse(js)
