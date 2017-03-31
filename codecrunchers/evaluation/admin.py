@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Problem, TestCase, Submission, Topic, Contest, TestCaseResult
+from .models import Problem, TestCase, Submission, Topic, Contest, TestCaseResult, ContestParticipant
 from jet.admin import CompactInline
 # Register your models here.
 
@@ -14,13 +14,13 @@ class ProblemInline(CompactInline):
     
 class ProblemAdmin(admin.ModelAdmin):
 
-    list_display = ['title', 'difficulty', 'reward_points','start_time', 'end_time', 'is_practice', 'is_active', 'creator']
+    list_display = ['title', 'difficulty', 'reward_points','is_active', 'creator']
     #To show Test cases tab inside problem
     inlines = [
         TestCaseInline,
         SubmissionInline,
     ]
-    list_filter = ['difficulty', 'is_active', 'is_practice']
+    list_filter = ['difficulty', 'is_active']
     search_fields = ['title','creator__username']
 
 class TestcaseAdmin(admin.ModelAdmin):
@@ -46,9 +46,14 @@ class ContestAdmin(admin.ModelAdmin):
     search_fields = ['creator','title','description']
 class TestCaseResultAdmin(admin.ModelAdmin):
     list_display = ['id', 'submission','test_case','time_submitted','status']
+
+class ContestParticipantAdmin(admin.ModelAdmin):
+    list_display = ['user', 'contest', 'achieved_score']
+
 admin.site.register(Topic, TopicAdmin)
 admin.site.register(Problem, ProblemAdmin)
 admin.site.register(TestCase, TestcaseAdmin)
 admin.site.register(Submission, SubmissionAdmin)
 admin.site.register(Contest, ContestAdmin)
 admin.site.register(TestCaseResult, TestCaseResultAdmin)
+admin.site.register(ContestParticipant, ContestParticipantAdmin)

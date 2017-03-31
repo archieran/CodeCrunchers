@@ -2,12 +2,12 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import Http404
 from django.conf import settings
-from .models import Topic, Problem, ConsoleLanguage, Submission, TestCaseResult
+from .models import Topic, Problem, ConsoleLanguage, Submission, TestCaseResult, Contest, ContestParticipant
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.utils import timezone
 from .models import TestCase
 from django.contrib.auth.models import User
-from django.db.models import Max, Aggregate, IntegerField
+from django.db.models import Max, Aggregate, Sum
 import json
 
 # Begin Coding from here
@@ -49,15 +49,23 @@ def evaluate(request, prob_id):
     return render(request, 'evaluation/solve.html', context)
 
 
-def practice_home(request):
-    problems = Problem.objects.select_related().filter(is_practice=True)
-    print problems
+def contest_home(request):
+    contests = Contest.objects.filter(is_active=True)
+    print contests
     context = {
         'active_tab': 'prac_home',
-        'problems': problems
+        'contests': contests
     }
-    return render(request, 'evaluation/practice_home.html', context)
+    return render(request, 'evaluation/contest_home.html', context)
 
+def contest_details(request, contest_id):
+    problems = Problem.objects.all().filter(contest__id = contest_id)
+    print problems
+    context = {
+        'problems': problems,
+        'contest' : contest_id,
+    }
+    return render(request, 'evaluation/contest_details.html', context)
 
 def run_testcases(request):
     #code runs just fine, make sure that there is atleast one sample test cases to not let this view blow up
@@ -108,6 +116,8 @@ def run_testcases(request):
     return HttpResponse(js)
 
 def run_submission(request):
+
+    # Variable Declarations
     API_KEY = settings.HACKERRANK_API
     source_code = request.POST.get("code")
     compiler = HackerRankAPI(API_KEY)
@@ -127,33 +137,50 @@ def run_submission(request):
     inputsequences = list()
     outputsequences = list()
     case_marks = list()
+    i = 0
+    actualoutputs = list()
+    data = dict()
+    output = list()
+    total_time = 0.0
+    total_memory = 0.0
+    achieved_score = 0
+    max_score = 0
+    contest_question = False
+    contest_score = 0
+    
+
+    if request.POST['contest_id']:
+        contest_id = int(request.POST['contest_id'])
+        contest = Contest.objects.filter(id = contest_id)[0]
+        print "Contest ID: %d" % contest_id
+        contest_question = True
+        contest_participant = ContestParticipant.objects.filter(contest__id = contest_id, user = user)[0]
+        print contest_participant.user
+
+    # Total Marks Calculations
     for case in cases_list:
         inputsequences.append(str(case.input_sequence).replace('\r', ''))
         case_marks.append(int(case.score))
         outputsequences.append(str(case.output_sequence.replace('\r', '')))
     result = compiler.run(
-        {'source': source_code,
-         'lang': lang,
-          'testcases': inputsequences,
+         {
+            'source': source_code,
+            'lang': lang,
+            'testcases': inputsequences,
          }
     )
-    i = 0
-    actualoutputs = list()
-    data = dict()
-    output = list()
     msg = result.message
     error = result.error
-    total_time = 0.0
-    total_memory = 0.0
+
+    # Memory and Time Calculations
     for time_taken in result.time:
         total_time = total_time + time_taken
     sub.total_execution_time = total_time
     for memory_consumed in result.memory:
         total_memory  = total_memory + memory_consumed
     sub.total_memory_used = total_memory
-    achieved_score = 0
-    max_score = 0
 
+    # Storing ouput of testcases in data
     for res in result.output:
         tcresult = TestCaseResult()
         data["id"] = i
@@ -181,33 +208,50 @@ def run_submission(request):
 
         output.append(data)
         data = dict()
-    print "Achieved Score: %d" % achieved_score
 
+    # Calculating Reward Points
     max_reward_points = Problem.objects.values('reward_points').filter(id=prob_id)[0]['reward_points']
-    print "Max Reward %d" % max_reward_points
     scaled_marks = (achieved_score * max_reward_points )/max_score
     sub.achieved_score = int(scaled_marks)
 
+    # Printing Stored and Calculated Variables
+    print "Achieved Score: %d" % achieved_score
+    print "Max Reward %d" % max_reward_points
     print "Max Score   : %f" % max_score
     print "Scaled Score: %f" % scaled_marks
 
-    # Logic for XP Calculation
     current_xp = user.profile.experience_points
     print "Current XP : %d" % current_xp
     previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+    previous_contest_score = ContestParticipant.objects.filter(user = user, contest = contest_id).aggregate(Max('achieved_score')).values()[0]
     print "Previous Score: %d" % previous_max_score
+    print "Previous Contest: %d" % previous_contest_score
+    print "Current Contest : %d" % contest_participant.achieved_score
 
+    # Logic for XP Calculation
     if previous_max_score < scaled_marks:
         sub.sub_made_by.profile.experience_points = (current_xp - previous_max_score) + scaled_marks
         print "New XP : %d" % sub.sub_made_by.profile.experience_points
         sub.sub_made_by.profile.save()
 
+    # Saving Contest
+    if contest_question:
+        sub.contest = contest
+        total_contest_score = Problem.objects.filter(contest = contest).aggregate(Sum('reward_points')).values()[0]
+        print "Total Contest Score : %d" % total_contest_score
+        if (contest_participant.achieved_score + scaled_marks) <= total_contest_score:
+            contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
+            print "New Contest Marks: %d" % contest_participant.achieved_score
+            contest_participant.save()
+
+    # Saving Submissions
     sub.save()
+    
     js = json.dumps(output)
+
     print js
     print prob_id
     print lang
     print source_code
-
 
     return HttpResponse(js)

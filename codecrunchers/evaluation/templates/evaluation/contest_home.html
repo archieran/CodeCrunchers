@@ -1,0 +1,12 @@
+{% extends 'www/base.html' %}
+
+{% block content %}
+    <div class="container">
+        <h1>Contests</h1>
+        {% for contest in contests %}
+            <p>{{ contest.title }}</p>
+            <a href="{% url 'ev:contest_details' contest.id %}" class="btn btn-primary">{{ contest.title }}</a>
+        {% endfor %}
+    </div>
+
+{% endblock %}

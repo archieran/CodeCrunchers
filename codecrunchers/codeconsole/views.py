@@ -1,21 +1,20 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, HttpResponseRedirect
 from django.views.decorators.csrf import csrf_exempt
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.conf import settings
 from .models import ConsoleLanguage
-from django.http import HttpResponseForbidden
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 # Create your views here.
 
+@login_required
 def console(request):
     context = {}
     context["languages"] = ConsoleLanguage.objects.filter(is_active=True)
     context["active_tab"] = 'console'
     return render(request, 'codeconsole/console.html', context)
 
-
 def runcode(request):
-
     print "Inside runcode"
     # print request.POST["code"]
     API_KEY = settings.HACKERRANK_API

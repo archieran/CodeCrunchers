@@ -167,7 +167,7 @@
                                 Profile </a>
                         </li>
                         <li>
-                            <a href="investoranalysis.aspx">
+                            <a href="{% url 'leaderboard' %}">
                                 <i class="glyphicon glyphicon-stats"></i>
                                 Leaderboard</a>
                         </li>
@@ -179,9 +179,9 @@
                         </li>
 
                         <li class="{% if active_tab == 'prac_home' %}active{% endif %}">
-                            <a href="{% url 'ev:prac_home' %}">
+                            <a href="{% url 'ev:contest_home' %}">
                                 <i class="fa fa-folder"></i>
-                                Practice</a>
+                                Contests</a>
                         </li>
 
                         <li class="{% if active_tab == 'console' %}active{% endif %}">

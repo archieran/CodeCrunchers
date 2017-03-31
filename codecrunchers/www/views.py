@@ -4,6 +4,8 @@ from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeFor
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from social_django.models import UserSocialAuth
+from .models import Profile
+from django.contrib.auth.models import User
 
 # Create your views here.
 def index(request):
@@ -59,3 +61,11 @@ def profile(request):
         'active_tab':'profile'
     }
     return render(request, 'www/profile.html',context)
+
+def leaderboard(request):
+    users = User.objects.all()
+    context = {
+        'active_tab':'leaderboard',
+        'users':users,
+    }
+    return render(request, 'www/leaderboard.html',context)

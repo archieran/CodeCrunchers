@@ -68,6 +68,19 @@
         editor.getSession().setUseWrapMode(true);
         editor.setShowPrintMargin(false);
 
+        {# Regex Function for Query String Parameters #}
+        function getParameterByName(name, url) {
+            if (!url) {
+                url = window.location.href;
+            }
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+            results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+
         {#   for the output window   #}
 
 
@@ -118,6 +131,8 @@
                 var prob_id = {{ challenge.id }};
                 var code = editor.session.getValue();
                 var lang = $('#lang').find(":selected").text();
+                var contest_id = getParameterByName('for');
+
                 $.ajax({
                     type: "POST",
                     url: "{% url 'ev:run_submission' %}",
@@ -125,6 +140,7 @@
                         "code": code,
                         "lang": lang,
                         "prob_id": prob_id,
+                        "contest_id": contest_id,
                         "csrfmiddlewaretoken": "{{csrf_token}}",
                     },
                     success: function (data) {

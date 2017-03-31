@@ -2,9 +2,9 @@
 
 {% block content %}
     <div class="container">
-        <h1>Practice Problems</h1>
+        <h1>Contests</h1>
         {% for problem in problems %}
-            <a href="" class="btn btn-primary">{{ problem.title }}</a>
+            <a href="{% url 'ev:evcode' problem.id %}?for={{ contest }}" class="btn btn-primary">{{ problem.title }}</a>
         {% endfor %}
     </div>
 

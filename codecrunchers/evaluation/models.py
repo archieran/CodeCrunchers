@@ -43,9 +43,9 @@ class Problem(models.Model):
     input_format = models.TextField(max_length=255, verbose_name="Input format")
     output_format = models.TextField( max_length=255, verbose_name="Output format")
     startup_code = models.TextField(max_length=65535, verbose_name="Initial code")
-    start_time = models.DateTimeField(verbose_name="Problem start time")
-    end_time = models.DateTimeField(verbose_name="Problem end time")
-    is_practice = models.BooleanField(default=False, verbose_name="Practice Problem")
+    # start_time = models.DateTimeField(verbose_name="Problem start time")
+    # end_time = models.DateTimeField(verbose_name="Problem end time")
+    # is_practice = models.BooleanField(default=False, verbose_name="Practice Problem")
     is_active = models.BooleanField(default=True, verbose_name="Active")
     difficulty = models.CharField(choices=PROB_DIFFICULTY_LEVELS, max_length=255, default=Easy)
     reward_points = models.IntegerField(default=100, null=False, blank=False, verbose_name="Reward points")
@@ -79,6 +79,7 @@ class Submission(models.Model):
     total_execution_time = models.FloatField(verbose_name="Total execution time")
     lang = models.ForeignKey(ConsoleLanguage)
     attempted = models.DateTimeField(verbose_name="Attempted")
+    contest = models.ForeignKey(Contest, verbose_name="Contest_ID", null=True, blank=True)
     # class Meta:
     #     unique_together = ('sub_made_by', 'prob')
     def __unicode__(self):
@@ -98,4 +99,15 @@ class TestCaseResult(models.Model):
 
     # class Meta:
        # unique_together = ['submission', 'test_case']
+class ContestParticipant(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, verbose_name="Contest")
+    achieved_score = models.IntegerField(default=0, verbose_name="Achieved Score")
 
+    class Meta:
+        unique_together = [
+            'user',
+            'contest',
+        ]
+    def __unicode__(self):
+        return str(self.contest)
