@@ -14,13 +14,13 @@ class ProblemInline(CompactInline):
     
 class ProblemAdmin(admin.ModelAdmin):
 
-    list_display = ['title', 'difficulty', 'reward_points','is_active', 'creator']
+    list_display = ['title', 'topic','difficulty', 'reward_points','is_active', 'creator']
     #To show Test cases tab inside problem
     inlines = [
         TestCaseInline,
         SubmissionInline,
     ]
-    list_filter = ['difficulty', 'is_active']
+    list_filter = ['topic','difficulty', 'is_active']
     search_fields = ['title','creator__username']
 
 class TestcaseAdmin(admin.ModelAdmin):
@@ -29,7 +29,7 @@ class TestcaseAdmin(admin.ModelAdmin):
     search_fields = ['problem__title']
 
 class SubmissionAdmin(admin.ModelAdmin):
-    list_display = ['sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang', 'attempted']
+    list_display = ['id', 'sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang', 'attempted']
     list_filter = ['lang__lang']
     search_fields = ['sub_made_by__username', 'prob__title']
 
@@ -41,11 +41,14 @@ class TopicAdmin(admin.ModelAdmin):
     ]
 
 class ContestAdmin(admin.ModelAdmin):
-    list_display = ['id', 'title','description','creator','start_time','end_time','is_active']
+    list_display = ['id', 'title','creator','start_time','end_time','is_active']
     list_filter = ['creator','is_active']
     search_fields = ['creator','title','description']
+
 class TestCaseResultAdmin(admin.ModelAdmin):
     list_display = ['id', 'submission','test_case','time_submitted','status']
+    list_filter = ['status']
+    search_fields = ['submission']
 
 class ContestParticipantAdmin(admin.ModelAdmin):
     list_display = ['user', 'contest', 'achieved_score']

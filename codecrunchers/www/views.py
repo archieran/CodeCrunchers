@@ -63,7 +63,7 @@ def profile(request):
     return render(request, 'www/profile.html',context)
 
 def leaderboard(request):
-    users = User.objects.all()
+    users = User.objects.all().order_by('-profile__experience_points')
     context = {
         'active_tab':'leaderboard',
         'users':users,

@@ -1,11 +1,22 @@
 {% extends 'www/base.html' %}
 
 {% block content %}
-    <div class="container">
-        <h1>Contests</h1>
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
+        <h1>Problems</h1>
+        <div class="table-responsive">
+        <table class="table table-hover table-bordered table-responsive panel text-center">
+        	<th class="panel-title text-center">Problem</th>
+        	<th class="panel-title text-center">Points</th>
+        	<th></th>
         {% for problem in problems %}
-            <a href="{% url 'ev:evcode' problem.id %}?for={{ contest }}" class="btn btn-primary">{{ problem.title }}</a>
+        <tr>
+        	<td>{{ problem.title }}</td>
+        	<td>{{ problem.reward_points }}</td>
+            <td><a href="{% url 'ev:evcode' problem.id %}?for={{ contest }}" class="btn btn-primary">Attempt</a></td>
+        </tr>
         {% endfor %}
+        </table>
+        </div>
     </div>
 
 {% endblock %}
