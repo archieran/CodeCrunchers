@@ -42,5 +42,6 @@ urlpatterns = [
     url(r'^settings/$', www.views.settings, name='settings'),
     url(r'^settings/password/$', www.views.password, name='password'),
     url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-    url(r'^leaderboard/$', www.views.leaderboard, name='leaderboard')
+    url(r'^leaderboard/$', www.views.leaderboard, name='leaderboard'),
+    url(r'^dashboard/$', www.views.dashboard, name='dashboard')
 ]

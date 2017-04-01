@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 	'codeconsole',
     'evaluation',
     'social_django',
+    'graphos',
 ]
 
 MIDDLEWARE_CLASSES = [

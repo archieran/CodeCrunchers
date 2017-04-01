@@ -5,7 +5,13 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
 from social_django.models import UserSocialAuth
 from .models import Profile
+from evaluation.models import ContestParticipant
 from django.contrib.auth.models import User
+from evaluation.models import Submission, ConsoleLanguage
+from graphos.sources.model import ModelDataSource, SimpleDataSource
+from graphos.renderers import morris, highcharts
+from django.db.models import Max, Aggregate, Sum, Count
+from graphos.renderers.gchart import LineChart
 
 # Create your views here.
 def index(request):
@@ -69,3 +75,31 @@ def leaderboard(request):
         'users':users,
     }
     return render(request, 'www/leaderboard.html',context)
+def dashboard(request):
+    query_set = Submission.objects.all().values('lang').annotate(langcount = Count('lang'))
+    print query_set
+    #data_source = ModelDataSource(query_set, fields=['user', 'experience_points', 'experience_points'],)
+    row = list()
+    data = list()
+    data.append(['Submissions', 'Language'])
+    for query in query_set:
+        languages = ConsoleLanguage.objects.filter(id = query.values()[0])
+        for language in languages:
+            row.append(language.lang)
+        numbers = query.values()[1]
+        row.append(numbers)
+        row.append(numbers)
+        data.append(row)
+        row = list()
+    print data
+
+    data_matrix =  [
+            data
+        ]
+    data_source = SimpleDataSource(data=data)
+    chart = highcharts.PieDonut(data_source)
+    context = {
+        'chart':chart,
+    }
+
+    return render(request, 'www/dashboard.html', context)

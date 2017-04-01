@@ -51,7 +51,6 @@ def evaluate(request, prob_id):
 
 def contest_home(request):
     contests = Contest.objects.filter(is_active=True)
-    print contests
     context = {
         'active_tab': 'prac_home',
         'contests': contests

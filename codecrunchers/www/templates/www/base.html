@@ -171,6 +171,13 @@
                                 <i class="glyphicon glyphicon-stats"></i>
                                 Leaderboard</a>
                         </li>
+                        {% if user.is_staff %}
+                        <li>
+                            <a href="{% url 'dashboard' %}">
+                                <i class="glyphicon glyphicon-stats"></i>
+                                Dashboard</a>
+                        </li>
+                        {% endif %}
 
                         <li class="{% if active_tab == 'problems' %}active{% endif %}">
                             <a href="{% url 'ev:evhome' %}">
