@@ -154,8 +154,6 @@ def run_submission(request):
         contest = Contest.objects.filter(id = contest_id)[0]
         print "Contest ID: %d" % contest_id
         contest_question = True
-        contest_participant = ContestParticipant.objects.filter(contest__id = contest_id, user = user)[0]
-        print contest_participant.user
 
     # Total Marks Calculations
     for case in cases_list:
@@ -223,10 +221,8 @@ def run_submission(request):
     current_xp = user.profile.experience_points
     print "Current XP : %d" % current_xp
     previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
-    previous_contest_score = ContestParticipant.objects.filter(user = user, contest = contest_id).aggregate(Max('achieved_score')).values()[0]
     print "Previous Score: %d" % previous_max_score
-    print "Previous Contest: %d" % previous_contest_score
-    print "Current Contest : %d" % contest_participant.achieved_score
+    
 
     # Logic for XP Calculation
     if previous_max_score < scaled_marks:
@@ -236,17 +232,36 @@ def run_submission(request):
 
     # Saving Contest
     if contest_question:
-        sub.contest = contest
-        total_contest_score = Problem.objects.filter(contest = contest).aggregate(Sum('reward_points')).values()[0]
-        print "Total Contest Score : %d" % total_contest_score
-        if (contest_participant.achieved_score + scaled_marks) <= total_contest_score:
+        #contest_participant = ContestParticipant.objects.filter(contest__id = contest_id, user = user)[0]
+        contest_participant, created = ContestParticipant.objects.get_or_create(contest = contest, user = user)
+        print contest_participant.user
+        if created:
+            contest_participant.achieved_score = 0
+            
+        #previous_contest_score = ContestParticipant.objects.filter(user = user, contest = contest_id).aggregate(Max('achieved_score')).values()[0]
+        prev_sub_score = Submission.objects.filter(sub_made_by = user, contest = contest, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+        if prev_sub_score:
+            if prev_sub_score < max_reward_points:
+                contest_participant.achieved_score = contest_participant.achieved_score - prev_sub_score + scaled_marks
+        else:
             contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
-            print "New Contest Marks: %d" % contest_participant.achieved_score
-            contest_participant.save()
+        print "Prev contest sub : " + str(prev_sub_score)
+        print "Current Contest : %d" % contest_participant.achieved_score
+        
+        sub.contest = contest
+        contest_participant.save()
+        
+        # Do Not Erase or make any changes
+        # print "Previous Contest: %d" % previous_contest_score
+        # total_contest_score = Problem.objects.filter(contest = contest).aggregate(Sum('reward_points')).values()[0]
+        # print "Total Contest Score : %d" % total_contest_score
+        # if (contest_participant.achieved_score + scaled_marks) <= total_contest_score:
+            # contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
+            # print "New Contest Marks: %d" % contest_participant.achieved_score
+            # contest_participant.save()
 
-    # Saving Submissions
+    # Saving Submissions and JSON
     sub.save()
-    
     js = json.dumps(output)
 
     print js
