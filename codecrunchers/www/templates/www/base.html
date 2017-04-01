@@ -19,7 +19,7 @@
     {#IntercoolerJS - AJAX on Steroids #}
     <script src="http://cdn.intercoolerjs.org/intercooler-1.1.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
-
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
     <style type="text/css">
         body {
             #background-color: #8BCBDE;
@@ -120,11 +120,27 @@
         }
 
         {#        End of copied code for scroll to top#}
+
+        {#        Logo header#}
+
+        #logo-main {
+            display: block;
+            margin: 20px auto;
+            position: static;
+            font-family: 'Pacifico', cursive;
+        }
+
+        {#     End of logo header   #}
     </style>
 
 </head>
 <body>
+<header role="banner">
+    <h1 id="logo-main" class="text-center">Code <i class="fa fa-code"></i> Crunchers</h1>
+
+</header>
 <div class="container">
+    <hr>
     <div class="row profile">
         <div class="col-md-3 col-lg-3 col-sm-4 col-xs-12">
             <div class="profile-sidebar">
@@ -166,17 +182,17 @@
                                 <i class="glyphicon glyphicon-user"></i>
                                 Profile </a>
                         </li>
-                        <li>
+                        <li class="{% if active_tab == 'leaderboard' %}active{% endif %}">
                             <a href="{% url 'leaderboard' %}">
                                 <i class="glyphicon glyphicon-stats"></i>
                                 Leaderboard</a>
                         </li>
                         {% if user.is_staff %}
-                        <li>
-                            <a href="{% url 'dashboard' %}">
-                                <i class="glyphicon glyphicon-stats"></i>
-                                Dashboard</a>
-                        </li>
+                            <li class="{% if active_tab == 'dashboard' %}active{% endif %}">
+                                <a href="{% url 'dashboard' %}">
+                                    <i class="fa fa-pie-chart"></i>
+                                    Dashboard</a>
+                            </li>
                         {% endif %}
 
                         <li class="{% if active_tab == 'problems' %}active{% endif %}">
@@ -220,9 +236,14 @@
 
         {% block content %}
         {% endblock %}
+
     </div>
 
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
+<hr>
+<footer class="text-center">
+    <h4 id="logo-main">&copy; 2017 Code <i class="fa fa-code"></i> crunchers</h4>
+</footer>
 </div>
 
 <script>

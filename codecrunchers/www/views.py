@@ -1,4 +1,4 @@
-from django.shortcuts import HttpResponse, render
+from django.shortcuts import HttpResponse, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -63,6 +63,8 @@ def password(request):
     return render(request, 'www/password.html', {form:'form'})
 
 def profile(request):
+    submissions = Submission.objects.filter(sub_made_by = request.user)
+    print submissions
     context = {
         'active_tab':'profile'
     }
@@ -88,18 +90,19 @@ def dashboard(request):
             row.append(language.lang)
         numbers = query.values()[1]
         row.append(numbers)
-        row.append(numbers)
         data.append(row)
         row = list()
     print data
+    data.append(['c', '5'])
 
     data_matrix =  [
             data
         ]
     data_source = SimpleDataSource(data=data)
-    chart = highcharts.PieDonut(data_source)
+    chart = morris.DonutChart(data_source)
     context = {
         'chart':chart,
+        'active_tab':'dashboard',
     }
 
     return render(request, 'www/dashboard.html', context)

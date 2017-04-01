@@ -1,10 +1,33 @@
 {% extends 'www/base.html' %}
 
 {% block content %}
-    <div class="container">
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
+
         <h1>Topics</h1>
-        {% for topic in topics %}
-            <a href="{% url 'ev:topic_probs' topic.id %}" class="btn btn-primary" >{{topic.topic_name}}</a>
-        {% endfor %}
+
+        <div class="table-responsive">
+            <table class="table table-hover table-bordered text-center panel">
+                <thead>
+                <tr>
+                    <th class="text-center panel-title">
+                        Topic
+                    </th>
+                    <th class="text-center panel-title">
+                        Link
+                    </th>
+                </tr>
+                </thead>
+                {% for topic in topics %}
+                    <tr>
+                        <td>
+                            {{ topic.topic_name }}
+                        </td>
+                        <td>
+                            <a href="{% url 'ev:topic_probs' topic.id %}" class="btn btn-primary">See problems</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 {% endblock %}
