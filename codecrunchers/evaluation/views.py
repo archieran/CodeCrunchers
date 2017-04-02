@@ -9,6 +9,7 @@ from .models import TestCase
 from django.contrib.auth.models import User
 from django.db.models import Max, Aggregate, Sum
 import json
+from django.http import JsonResponse
 
 # Begin Coding from here
 
@@ -112,7 +113,7 @@ def run_testcases(request):
     print prob_id
     print lang
     print source_code
-    return HttpResponse(js)
+    return HttpResponse(js, content_type='application/json')
 
 def run_submission(request):
 
@@ -262,10 +263,10 @@ def run_submission(request):
     # Saving Submissions and JSON
     sub.save()
     js = json.dumps(output)
-
+    
     print js
-    print prob_id
-    print lang
-    print source_code
+    # print prob_id
+    # print lang
+    # print source_code
 
-    return HttpResponse(js)
+    return HttpResponse(js, content_type='application/json')

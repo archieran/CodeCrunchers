@@ -56,6 +56,28 @@
         </button>
         <button class="btn btn-success pull-right compilebutons" id="btnSubmit">Submit
         </button>
+
+        <!-- Bootstrap cards -->
+        <br><br><br><br>
+        <div class="panel panel-default" id="resultCard">
+            <div class="panel-heading" id="resultCardTitle">
+                
+            </div>
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="active"><th id="resultCardTitleHeader">Test Cases</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="resultCardData">
+                        
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                <small>Built with Bootcards - Table Card</small>
+            </div>
+        </div>
+        <!-- -->
     </div>
 
     <script>
@@ -92,8 +114,11 @@
         {#    #}
         $(document).ready(function () {
             $("#loader").hide();
+            $("#resultCard").hide();
+
             $("#btnRun").click(function () {
                 $("#loader").show();
+                $('#resultCard').hide();
                 $(".compilebutons").hide();
                 var prob_id = {{ challenge.id }};
                 var code = editor.session.getValue();
@@ -110,9 +135,23 @@
                     success: function (data) {
                         console.log("Success");
                         console.log(data);
+                        $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Sample Test Cases</h3>");
+                        $('#resultCardTitleHeader').html("Sample Test Cases");
+                        $('#resultCardData').html("");
+                        var str = data.map(function(item) { 
+                        var x = 0;
+                        var y = 1;
+                        for (var key in item)
+                            while(x<1)
+                            {
+                                $('#resultCardData').append("<tr><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
+                                x = 1;
+                            }
+                        });
                         $('#btnSubmit').show();
                         $('#btnRun').show();
                         $('#loader').hide();
+                        $("#resultCard").show();
                     },
                     error: function () {
                         output.setValue("Error:\n");
@@ -128,6 +167,7 @@
             $("#btnSubmit").click(function () {
                 $("#loader").show();
                 $(".compilebutons").hide();
+                $("#resultCard").hide();
                 var prob_id = {{ challenge.id }};
                 var code = editor.session.getValue();
                 var lang = $('#lang').find(":selected").text();
@@ -146,9 +186,23 @@
                     success: function (data) {
                         console.log("Success");
                         console.log(data);
+                        $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Test Cases</h3>");
+                        $('#resultCardTitleHeader').html("Test Cases");
+                        $('#resultCardData').html("");
+                        var str = data.map(function(item) { 
+                        var x = 0;
+                        var y = 1;
+                        for (var key in item)
+                            while(x<1)
+                            {
+                                $('#resultCardData').append("<tr><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
+                                x = 1;
+                            }
+                        });
                         $('#btnSubmit').show();
                         $('#btnRun').show();
                         $('#loader').hide();
+                        $("#resultCard").show();
                     },
                     error: function () {
                         console.log("Error");
