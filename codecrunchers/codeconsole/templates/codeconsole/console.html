@@ -2,7 +2,8 @@
 
 {% block content %}
     {% load staticfiles %}
-    <script src="{% static 'ace/src-min/ace.js' %}" type="text/javascript" charset="utf-8"></script>
+    <script src="{% static 'ace/src-min/ace.js' %}" type="text/javascript" charset="utf-8"
+            xmlns="http://www.w3.org/1999/html"></script>
     <style type="text/css" media="screen">
 
         #editor {
@@ -34,6 +35,9 @@
                 <div class="well text-justify">
                     To provide runtime input to the program, use the below given textbox.
                 </div>
+               <span class="h3"> <span class="label label-primary" id="saveTime"></span></span><i class="fa fa-cloud-upload btn fa-2x pull-right" id="btnSaveCode"> Save</i>
+                <br><br>
+
                 <div id="editor">print("Hello world")
                 </div>
                 <br>
@@ -47,6 +51,7 @@
                         </select>
                     </div>
                 </div>
+
                 <i id="loader" class="fa fa-circle-o-notch fa-spin pull-right fa-2x" aria-hidden="true"></i>
                 <button class="btn btn-success pull-right" id="btnCompile">Run
                 </button>
@@ -166,6 +171,34 @@
                 });
             });
         });
+        {#    Script for live code#}
+        $("#btnSaveCode").click(function () {
+            console.log("Hello");
+            var code = editor.session.getValue();
+            $(".fa-save").hide();
+            $.ajax({
+                type: "POST",
+                url: "{% url 'cc:update_live_code' %}",
+                data: {
+                    "code":code,
+                    "csrfmiddlewaretoken": "{{csrf_token}}",
+                },
+                success: function (data) {
+                    console.log("Success");
+                    console.log(data);
+                    $("#saveTime").html(data);
+                },
+                error: function (data) {
+
+
+                },
+
+            });
+
+            $(".fa-save").show();
+        });
+
+
     </script>
     <!--<script>
         var editor = ace.edit("output");

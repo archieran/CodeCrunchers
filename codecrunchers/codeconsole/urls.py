@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^$', views.console, name='console'),
     url(r'^runcode$', views.runcode, name='run_code'),
     url(r'^getacename$', views.get_ace_name, name='get_ace_name'),
+    url(r'update_livecode$', views.update_livecode, name='update_live_code')
 ]

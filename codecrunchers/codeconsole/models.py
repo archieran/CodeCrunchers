@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 class ConsoleLanguage(models.Model):
@@ -14,3 +16,11 @@ class ConsoleLanguage(models.Model):
 
     def __unicode__(self):
         return self.lang
+
+class SavedCode(models.Model):
+    code = models.TextField(verbose_name="Code", help_text="Code committed by the user")
+    user = models.ForeignKey(User, on_delete=None, help_text="Writer of the code", verbose_name="Coder")
+    time_saved = models.DateTimeField(verbose_name="Last saved", help_text="Time of last code backup", default=timezone.now)
+    def __unicode__(self):
+        return self.user.username
+

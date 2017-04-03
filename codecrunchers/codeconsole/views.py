@@ -1,8 +1,9 @@
 from django.shortcuts import render, HttpResponse, HttpResponseRedirect
+from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.conf import settings
-from .models import ConsoleLanguage
+from .models import ConsoleLanguage, SavedCode
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 # Create your views here.
@@ -57,3 +58,10 @@ def get_ace_name(request):
     print lang_query
     res = ConsoleLanguage.objects.get(lang=lang_query)
     return HttpResponse(res.ace_file_name)
+
+def update_livecode(request):
+    vals = dict(request.POST)
+    sc, created = SavedCode.objects.get_or_create(user = request.user)
+    sc.code = vals.get("code")[0]
+    sc.save()
+    return HttpResponse("Last Saved : " + str(timezone.now()).split('.')[0])
