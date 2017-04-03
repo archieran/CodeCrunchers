@@ -56,7 +56,10 @@
         </button>
         <button class="btn btn-success pull-right compilebutons" id="btnSubmit">Submit
         </button>
+        <br><br><br>
+        <div id="compileError" class="well" style="white-space: pre-wrap">
 
+        </div>     
         <!-- Bootstrap cards -->
         <br><br><br><br>
         <div class="panel panel-default" id="resultCard">
@@ -64,18 +67,19 @@
                 
             </div>
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table">
                     <thead>
-                        <tr class="active"><th id="resultCardTitleHeader">Test Cases</th><th>Status</th></tr>
+                        <tr class="active" id="resultCardTitleHeader"></tr>
                     </thead>
                     <tbody id="resultCardData">
                         
                     </tbody>
                 </table>
             </div>
-            <div class="panel-footer">
-                <small>Built with Bootcards - Table Card</small>
+            <div class="panel-footer" id="resultCardFooter" style="padding-bottom: 30px">
+                
             </div>
+            
         </div>
         <!-- -->
     </div>
@@ -115,8 +119,10 @@
         $(document).ready(function () {
             $("#loader").hide();
             $("#resultCard").hide();
+            $("#compileError").hide();
 
             $("#btnRun").click(function () {
+                $("#compileError").hide();
                 $("#loader").show();
                 $('#resultCard').hide();
                 $(".compilebutons").hide();
@@ -135,36 +141,66 @@
                     success: function (data) {
                         console.log("Success");
                         console.log(data);
-                        $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Sample Test Cases</h3>");
-                        $('#resultCardTitleHeader').html("Sample Test Cases");
-                        $('#resultCardData').html("");
-                        var str = data.map(function(item) { 
-                        var x = 0;
-                        var y = 1;
-                        for (var key in item)
-                            while(x<1)
-                            {
-                                $('#resultCardData').append("<tr><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
-                                x = 1;
+
+                        try{
+                            $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Sample Test Cases</h3>");
+                            $('#resultCardTitleHeader').html("");
+                            $('#resultCardTitleHeader').html("<th>Sample Test Cases</th><th>Input</th><th>Expected Output</th><th>Your Output</th><th>Status</th>");
+                            $('#resultCardData').html("");
+                            var hitRatio = 0;
+                            var hitFlag = 0;
+                            var success = 0;
+                            var str = data.map(function(item) { 
+                            var x = 0;
+                            var y = 1;
+                            for (var key in item){
+                                while(x<1)
+                                {
+                                    hitFlag = hitFlag + 1;
+                                    if(item["status"].toString() === "true"){
+                                        $('#resultCardData').append("<tr class='btn-success'><td>Sample Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["input"]+"</td><td>"+item["expectedoutput"]+"</td><td>"+item["actualoutput"]+"</td><td>"+item["status"]+"</td></tr>");    
+                                        hitRatio = hitRatio + 1;
+                                    }else{
+                                        $('#resultCardData').append("<tr class='btn-danger'><td>Sample Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["input"]+"</td><td>"+item["expectedoutput"]+"</td><td>"+item["actualoutput"]+"</td><td>"+item["status"]+"</td></tr>");
+                                    }
+                                    x = 1;
+                                }
                             }
-                        });
+                            
+                            success = (hitRatio * 100) / hitFlag;
+                            $('#resultCardFooter').html("");
+                            $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: " +Math.floor(success)+" %</p>");
+                            }); 
+                            $("#resultCard").show();
+                        }catch(err){
+                            console.log("Inside catch");
+                            $("#resultCard").hide();
+                            $('.compilebutons').show();
+                            $('#loader').hide();
+                            $("#compileError").text(data);
+                            $("#compileError").show();
+                        }
+                        
+                        
                         $('#btnSubmit').show();
                         $('#btnRun').show();
                         $('#loader').hide();
-                        $("#resultCard").show();
+
                     },
-                    error: function () {
-                        output.setValue("Error:\n");
+                    error: function (data) {
+                        console.log(data);
                         console.log("Error");
-                        output.clearSelection();
-                        $('#btnCompile').show();
+                        $('.compilebutons').show();
                         $('#loader').hide();
+                        $("#compileError").html("<p class='text-danger'>"+ data[0]["message"] + "</p>");
+                        $("#compileError").show();
                     },
 
                 });
             });
 
             $("#btnSubmit").click(function () {
+                $("#compileError").hide();
                 $("#loader").show();
                 $(".compilebutons").hide();
                 $("#resultCard").hide();
@@ -186,28 +222,57 @@
                     success: function (data) {
                         console.log("Success");
                         console.log(data);
-                        $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Test Cases</h3>");
-                        $('#resultCardTitleHeader').html("Test Cases");
-                        $('#resultCardData').html("");
-                        var str = data.map(function(item) { 
-                        var x = 0;
-                        var y = 1;
-                        for (var key in item)
-                            while(x<1)
-                            {
-                                $('#resultCardData').append("<tr><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
-                                x = 1;
+                        try{
+                            $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Test Cases</h3>");
+                            $('#resultCardTitleHeader').html("");
+                            $('#resultCardTitleHeader').html("<th>Test Cases</th><th>Status</th>");
+                            $('#resultCardData').html("");
+                            var hitRatio = 0;
+                            var hitFlag = 0;
+                            var success = 0;
+                            var str = data.map(function(item) { 
+                            var x = 0;
+                            var y = 1;
+                            for (var key in item){
+                                while(x<1)
+                                {
+                                    hitFlag = hitFlag + 1;
+                                    if(item["status"].toString() === "true"){
+                                        $('#resultCardData').append("<tr class='btn-success'><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
+                                        hitRatio = hitRatio + 1;
+                                    }
+                                    else{
+                                        $('#resultCardData').append("<tr class='btn-danger'><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
+                                    }
+                                    x = 1;
+                                }
                             }
-                        });
+                            success = (hitRatio * 100) / hitFlag;
+                            $('#resultCardFooter').html("");
+                            $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: "+Math.floor(success)+" %</p>");
+                            });
+                            $('#btnSubmit').show();
+                            $('#btnRun').show();
+                            $('#loader').hide();
+                            $("#resultCard").show();
+                        } catch(err){
+                            console.log("Inside catch");
+                            $("#resultCard").hide();
+                            $('.compilebutons').show();
+                            $('#loader').hide();
+                            $("#compileError").text(data);
+                            $("#compileError").show();
+                        }
                         $('#btnSubmit').show();
                         $('#btnRun').show();
                         $('#loader').hide();
-                        $("#resultCard").show();
                     },
                     error: function () {
                         console.log("Error");
                         $('.compilebutons').show();
                         $('#loader').hide();
+                        $("#compileError").html("<p class='text-danger'>ERROR</p>");
+                        $("#compileError").show();
                     },
 
                 });

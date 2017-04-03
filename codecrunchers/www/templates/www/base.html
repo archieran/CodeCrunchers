@@ -222,7 +222,7 @@
                             </li>
                         {% endif %}
                         <li>
-                            {% if user %}
+                            {% if user.is_logged %}
                             <a href="{% url 'auth_logout' %}">
                                 <i class="glyphicon glyphicon-log-out"></i>
                                 Sign Out</a>

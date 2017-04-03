@@ -96,23 +96,29 @@ def run_testcases(request):
     output = list()
     msg = result.message
     error = result.error
-    print msg
-    print error
+    print "Msg: " + str(msg)
+    print "Error: "+ str(error)
     print result.output
-    for res in result.output:
-        data["id"] = i
-        data["input"] = inputsequences[i].strip()
-        data["expectedoutput"] = outputsequences[i].strip()
-        data["actualoutput"] = res.strip()
-        data["status"] = data["actualoutput"] == data["expectedoutput"]
-        i=i+1
-        output.append(data)
-        data = dict()
+    try:
+        for res in result.output:
+            data["id"] = i
+            data["input"] = inputsequences[i].strip()
+            data["expectedoutput"] = outputsequences[i].strip()
+            data["actualoutput"] = res.strip()
+            if error[i]:
+                data["actualoutput"] = error[i]
+            data["status"] = data["actualoutput"] == data["expectedoutput"]
+            i=i+1
+            output.append(data)
+            data = dict()
+    except:
+        return HttpResponse(msg)
     js = json.dumps(output)
     print js
     print prob_id
     print lang
     print source_code
+    
     return HttpResponse(js, content_type='application/json')
 
 def run_submission(request):
@@ -169,101 +175,104 @@ def run_submission(request):
     )
     msg = result.message
     error = result.error
+    try:
+        # Memory and Time Calculations
+        for time_taken in result.time:
+            total_time = total_time + time_taken
+        sub.total_execution_time = total_time
+        for memory_consumed in result.memory:
+            total_memory  = total_memory + memory_consumed
+        sub.total_memory_used = total_memory
 
-    # Memory and Time Calculations
-    for time_taken in result.time:
-        total_time = total_time + time_taken
-    sub.total_execution_time = total_time
-    for memory_consumed in result.memory:
-        total_memory  = total_memory + memory_consumed
-    sub.total_memory_used = total_memory
-
-    # Storing ouput of testcases in data
-    for res in result.output:
-        tcresult = TestCaseResult()
-        data["id"] = i
-        data["input"] = inputsequences[i].strip()
-        data["expectedoutput"] = outputsequences[i].strip()
-        data["actualoutput"] = res.strip()
-        data["status"] = data["actualoutput"] == data["expectedoutput"]
-        data["memory"] = result.memory[i]
-        data["time"] = result.time[i]
-        max_score = max_score + case_marks[i]
-        sub.achieved_score = 0
-        sub.save()
-        tcresult.submission = sub
-        if data["status"]:
-            tcresult.status = "P"
-        else:
-            tcresult.status = "F"
-        tcresult.time_submitted = timezone.now()
-        tcresult.test_case = cases[i]
-        print tcresult
-        tcresult.save()
-        if data["status"]:
-            achieved_score = achieved_score + case_marks[i]
-        i=i+1
-
-        output.append(data)
-        data = dict()
-
-    # Calculating Reward Points
-    max_reward_points = Problem.objects.values('reward_points').filter(id=prob_id)[0]['reward_points']
-    scaled_marks = (achieved_score * max_reward_points )/max_score
-    sub.achieved_score = int(scaled_marks)
-
-    # Printing Stored and Calculated Variables
-    print "Achieved Score: %d" % achieved_score
-    print "Max Reward %d" % max_reward_points
-    print "Max Score   : %f" % max_score
-    print "Scaled Score: %f" % scaled_marks
-
-    current_xp = user.profile.experience_points
-    print "Current XP : %d" % current_xp
-    previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
-    print "Previous Score: %d" % previous_max_score
+        # Storing ouput of testcases in data
     
+        for res in result.output:
+            tcresult = TestCaseResult()
+            data["id"] = i
+            data["input"] = inputsequences[i].strip()
+            data["expectedoutput"] = outputsequences[i].strip()
+            data["actualoutput"] = res.strip()
+            data["status"] = data["actualoutput"] == data["expectedoutput"]
+            data["memory"] = result.memory[i]
+            data["time"] = result.time[i]
+            max_score = max_score + case_marks[i]
+            sub.achieved_score = 0
+            sub.save()
+            tcresult.submission = sub
+            if data["status"]:
+                tcresult.status = "P"
+            else:
+                tcresult.status = "F"
+            tcresult.time_submitted = timezone.now()
+            tcresult.test_case = cases[i]
+            print tcresult
+            tcresult.save()
+            if data["status"]:
+                achieved_score = achieved_score + case_marks[i]
+            i=i+1
 
-    # Logic for XP Calculation
-    if previous_max_score < scaled_marks:
-        sub.sub_made_by.profile.experience_points = (current_xp - previous_max_score) + scaled_marks
-        print "New XP : %d" % sub.sub_made_by.profile.experience_points
-        sub.sub_made_by.profile.save()
+            output.append(data)
+            data = dict()
 
-    # Saving Contest
-    if contest_question:
-        #contest_participant = ContestParticipant.objects.filter(contest__id = contest_id, user = user)[0]
-        contest_participant, created = ContestParticipant.objects.get_or_create(contest = contest, user = user)
-        print contest_participant.user
-        if created:
-            contest_participant.achieved_score = 0
+        # Calculating Reward Points
+        max_reward_points = Problem.objects.values('reward_points').filter(id=prob_id)[0]['reward_points']
+        scaled_marks = (achieved_score * max_reward_points )/max_score
+        sub.achieved_score = int(scaled_marks)
+
+        # Printing Stored and Calculated Variables
+        print "Achieved Score: %d" % achieved_score
+        print "Max Reward %d" % max_reward_points
+        print "Max Score   : %f" % max_score
+        print "Scaled Score: %f" % scaled_marks
+
+        current_xp = user.profile.experience_points
+        print "Current XP : %d" % current_xp
+        previous_max_score = Submission.objects.filter(sub_made_by = user, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+        print "Previous Score: %d" % previous_max_score
+        
+
+        # Logic for XP Calculation
+        if previous_max_score < scaled_marks:
+            sub.sub_made_by.profile.experience_points = (current_xp - previous_max_score) + scaled_marks
+            print "New XP : %d" % sub.sub_made_by.profile.experience_points
+            sub.sub_made_by.profile.save()
+
+        # Saving Contest
+        if contest_question:
+            #contest_participant = ContestParticipant.objects.filter(contest__id = contest_id, user = user)[0]
+            contest_participant, created = ContestParticipant.objects.get_or_create(contest = contest, user = user)
+            print contest_participant.user
+            if created:
+                contest_participant.achieved_score = 0
+                
+            #previous_contest_score = ContestParticipant.objects.filter(user = user, contest = contest_id).aggregate(Max('achieved_score')).values()[0]
+            prev_sub_score = Submission.objects.filter(sub_made_by = user, contest = contest, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
+            if prev_sub_score:
+                if prev_sub_score < max_reward_points:
+                    contest_participant.achieved_score = contest_participant.achieved_score - prev_sub_score + scaled_marks
+            else:
+                contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
+            print "Prev contest sub : " + str(prev_sub_score)
+            print "Current Contest : %d" % contest_participant.achieved_score
             
-        #previous_contest_score = ContestParticipant.objects.filter(user = user, contest = contest_id).aggregate(Max('achieved_score')).values()[0]
-        prev_sub_score = Submission.objects.filter(sub_made_by = user, contest = contest, prob = sub.prob).aggregate(Max('achieved_score')).values()[0]
-        if prev_sub_score:
-            if prev_sub_score < max_reward_points:
-                contest_participant.achieved_score = contest_participant.achieved_score - prev_sub_score + scaled_marks
-        else:
-            contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
-        print "Prev contest sub : " + str(prev_sub_score)
-        print "Current Contest : %d" % contest_participant.achieved_score
-        
-        sub.contest = contest
-        contest_participant.save()
-        
-        # Do Not Erase or make any changes
-        # print "Previous Contest: %d" % previous_contest_score
-        # total_contest_score = Problem.objects.filter(contest = contest).aggregate(Sum('reward_points')).values()[0]
-        # print "Total Contest Score : %d" % total_contest_score
-        # if (contest_participant.achieved_score + scaled_marks) <= total_contest_score:
-            # contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
-            # print "New Contest Marks: %d" % contest_participant.achieved_score
-            # contest_participant.save()
+            sub.contest = contest
+            contest_participant.save()
+            
+            # Do Not Erase or make any changes
+            # print "Previous Contest: %d" % previous_contest_score
+            # total_contest_score = Problem.objects.filter(contest = contest).aggregate(Sum('reward_points')).values()[0]
+            # print "Total Contest Score : %d" % total_contest_score
+            # if (contest_participant.achieved_score + scaled_marks) <= total_contest_score:
+                # contest_participant.achieved_score = contest_participant.achieved_score + scaled_marks
+                # print "New Contest Marks: %d" % contest_participant.achieved_score
+                # contest_participant.save()
 
-    # Saving Submissions and JSON
-    sub.save()
+        # Saving Submissions and JSON
+        sub.save()
+    except TypeError:
+        print msg
+        return HttpResponse(msg)
     js = json.dumps(output)
-    
     print js
     # print prob_id
     # print lang
