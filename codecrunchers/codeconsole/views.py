@@ -65,3 +65,11 @@ def update_livecode(request):
     sc.code = vals.get("code")[0]
     sc.save()
     return HttpResponse("Last Saved : " + str(timezone.now()).split('.')[0])
+
+def get_live_code(request):
+    try:
+        sc = SavedCode.objects.get(user = request.user)
+        msg = sc.code
+    except SavedCode.DoesNotExist:
+        msg = "79f1eb5e35810df3389588190f7dd2ae"
+    return  HttpResponse(msg)

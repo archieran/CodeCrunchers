@@ -9,7 +9,7 @@
             margin-top: 10px;
             visibility: visible;
             width: 100%;
-            height: 280px;
+            height: 400px;
         }
 
         #output {
@@ -49,6 +49,11 @@
                 {% endfor %}
             </select>
         </div>
+        <i class="fa fa-cloud-upload btn fa-2x"
+           id="btnSaveCode"> Save</i><i
+            class="fa fa-cloud-download btn fa-2x" id="btnRestore"> Restore</i>
+        <span class="label label-primary" id="saveTime"></span>
+
         <div id="editor">{{ challenge.startup_code }}</div>
         <br>
         <i id="loader" class="fa fa-circle-o-notch fa-spin pull-right fa-2x" aria-hidden="true"></i>
@@ -57,29 +62,31 @@
         <button class="btn btn-success pull-right compilebutons" id="btnSubmit">Submit
         </button>
         <br><br><br>
+
         <div id="compileError" class="well" style="white-space: pre-wrap">
 
-        </div>     
+        </div>
         <!-- Bootstrap cards -->
         <br><br><br><br>
+
         <div class="panel panel-default" id="resultCard">
             <div class="panel-heading" id="resultCardTitle">
-                
+
             </div>
             <div class="table-responsive">
                 <table class="table">
                     <thead>
-                        <tr class="active" id="resultCardTitleHeader"></tr>
+                    <tr class="active" id="resultCardTitleHeader"></tr>
                     </thead>
                     <tbody id="resultCardData">
-                        
+
                     </tbody>
                 </table>
             </div>
             <div class="panel-footer" id="resultCardFooter" style="padding-bottom: 30px">
-                
+
             </div>
-            
+
         </div>
         <!-- -->
     </div>
@@ -87,6 +94,7 @@
     <script>
         {#   Initialize the editor     #}
         var editor = ace.edit("editor");
+        editor.$blockScrolling = Infinity
         editor.setTheme("ace/theme/cobalt");
         editor.getSession().setTabSize(4);
         editor.getSession().setMode("ace/mode/python");
@@ -101,7 +109,7 @@
             }
             name = name.replace(/[\[\]]/g, "\\$&");
             var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-            results = regex.exec(url);
+                    results = regex.exec(url);
             if (!results) return null;
             if (!results[2]) return '';
             return decodeURIComponent(results[2].replace(/\+/g, " "));
@@ -142,7 +150,7 @@
                         console.log("Success");
                         console.log(data);
 
-                        try{
+                        try {
                             $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Sample Test Cases</h3>");
                             $('#resultCardTitleHeader').html("");
                             $('#resultCardTitleHeader').html("<th>Sample Test Cases</th><th>Input</th><th>Expected Output</th><th>Your Output</th><th>Status</th>");
@@ -150,29 +158,28 @@
                             var hitRatio = 0;
                             var hitFlag = 0;
                             var success = 0;
-                            var str = data.map(function(item) { 
-                            var x = 0;
-                            var y = 1;
-                            for (var key in item){
-                                while(x<1)
-                                {
-                                    hitFlag = hitFlag + 1;
-                                    if(item["status"].toString() === "true"){
-                                        $('#resultCardData').append("<tr class='btn-success'><td>Sample Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["input"]+"</td><td>"+item["expectedoutput"]+"</td><td>"+item["actualoutput"]+"</td><td>"+item["status"]+"</td></tr>");    
-                                        hitRatio = hitRatio + 1;
-                                    }else{
-                                        $('#resultCardData').append("<tr class='btn-danger'><td>Sample Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["input"]+"</td><td>"+item["expectedoutput"]+"</td><td>"+item["actualoutput"]+"</td><td>"+item["status"]+"</td></tr>");
+                            var str = data.map(function (item) {
+                                var x = 0;
+                                var y = 1;
+                                for (var key in item) {
+                                    while (x < 1) {
+                                        hitFlag = hitFlag + 1;
+                                        if (item["status"].toString() === "true") {
+                                            $('#resultCardData').append("<tr class='btn-success'><td>Sample Test Case " + parseInt(item["id"] + y) + "</td><td>" + item["input"] + "</td><td>" + item["expectedoutput"] + "</td><td>" + item["actualoutput"] + "</td><td>" + item["status"] + "</td></tr>");
+                                            hitRatio = hitRatio + 1;
+                                        } else {
+                                            $('#resultCardData').append("<tr class='btn-danger'><td>Sample Test Case " + parseInt(item["id"] + y) + "</td><td>" + item["input"] + "</td><td>" + item["expectedoutput"] + "</td><td>" + item["actualoutput"] + "</td><td>" + item["status"] + "</td></tr>");
+                                        }
+                                        x = 1;
                                     }
-                                    x = 1;
                                 }
-                            }
-                            
-                            success = (hitRatio * 100) / hitFlag;
-                            $('#resultCardFooter').html("");
-                            $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: " +Math.floor(success)+" %</p>");
-                            }); 
+
+                                success = (hitRatio * 100) / hitFlag;
+                                $('#resultCardFooter').html("");
+                                $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: " + Math.floor(success) + " %</p>");
+                            });
                             $("#resultCard").show();
-                        }catch(err){
+                        } catch (err) {
                             console.log("Inside catch");
                             $("#resultCard").hide();
                             $('.compilebutons').show();
@@ -180,8 +187,8 @@
                             $("#compileError").text(data);
                             $("#compileError").show();
                         }
-                        
-                        
+
+
                         $('#btnSubmit').show();
                         $('#btnRun').show();
                         $('#loader').hide();
@@ -192,7 +199,7 @@
                         console.log("Error");
                         $('.compilebutons').show();
                         $('#loader').hide();
-                        $("#compileError").html("<p class='text-danger'>"+ data[0]["message"] + "</p>");
+                        $("#compileError").html("<p class='text-danger'>" + data[0]["message"] + "</p>");
                         $("#compileError").show();
                     },
 
@@ -222,7 +229,7 @@
                     success: function (data) {
                         console.log("Success");
                         console.log(data);
-                        try{
+                        try {
                             $('#resultCardTitle').html("<h3 class=\"panel-title\">Verifying with Test Cases</h3>");
                             $('#resultCardTitleHeader').html("");
                             $('#resultCardTitleHeader').html("<th>Test Cases</th><th>Status</th>");
@@ -230,32 +237,31 @@
                             var hitRatio = 0;
                             var hitFlag = 0;
                             var success = 0;
-                            var str = data.map(function(item) { 
-                            var x = 0;
-                            var y = 1;
-                            for (var key in item){
-                                while(x<1)
-                                {
-                                    hitFlag = hitFlag + 1;
-                                    if(item["status"].toString() === "true"){
-                                        $('#resultCardData').append("<tr class='btn-success'><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
-                                        hitRatio = hitRatio + 1;
+                            var str = data.map(function (item) {
+                                var x = 0;
+                                var y = 1;
+                                for (var key in item) {
+                                    while (x < 1) {
+                                        hitFlag = hitFlag + 1;
+                                        if (item["status"].toString() === "true") {
+                                            $('#resultCardData').append("<tr class='btn-success'><td>Test Case " + parseInt(item["id"] + y) + "</td><td>" + item["status"] + "</td></tr>");
+                                            hitRatio = hitRatio + 1;
+                                        }
+                                        else {
+                                            $('#resultCardData').append("<tr class='btn-danger'><td>Test Case " + parseInt(item["id"] + y) + "</td><td>" + item["status"] + "</td></tr>");
+                                        }
+                                        x = 1;
                                     }
-                                    else{
-                                        $('#resultCardData').append("<tr class='btn-danger'><td>Test Case "+parseInt(item["id"] + y)+"</td><td>"+item["status"]+"</td></tr>");
-                                    }
-                                    x = 1;
                                 }
-                            }
-                            success = (hitRatio * 100) / hitFlag;
-                            $('#resultCardFooter').html("");
-                            $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: "+Math.floor(success)+" %</p>");
+                                success = (hitRatio * 100) / hitFlag;
+                                $('#resultCardFooter').html("");
+                                $('#resultCardFooter').append("<p class='pull-right'>Success Ratio: " + Math.floor(success) + " %</p>");
                             });
                             $('#btnSubmit').show();
                             $('#btnRun').show();
                             $('#loader').hide();
                             $("#resultCard").show();
-                        } catch(err){
+                        } catch (err) {
                             console.log("Inside catch");
                             $("#resultCard").hide();
                             $('.compilebutons').show();
@@ -306,6 +312,60 @@
             });
             {#      End of language switch      #}
 
+            {#    Script for save code#}
+            $("#btnSaveCode").click(function () {
+                console.log("Hello");
+                var code = editor.session.getValue();
+                $(".fa-save").hide();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cc:update_live_code' %}",
+                    data: {
+                        "code": code,
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        $("#saveTime").html(data);
+                    },
+                    error: function (data) {
+
+
+                    },
+
+                });
+
+                $(".fa-save").show();
+            });
+            {#    Code to restore code session    #}
+            $("#btnRestore").click(function () {
+                console.log("Hello");
+                $(".fa-save").hide();
+                $.ajax({
+                    type: "POST",
+                    url: "{% url 'cc:get_live_code' %}",
+                    data: {
+                        "csrfmiddlewaretoken": "{{csrf_token}}",
+                    },
+                    success: function (data) {
+                        console.log("Success");
+                        console.log(data);
+                        if (data === "79f1eb5e35810df3389588190f7dd2ae") {
+                            $("#saveTime").html("No codebase found");
+                        } else {
+                            editor.session.setValue(data);
+                        }
+
+                    },
+                    error: function (data) {
+
+                    },
+
+                });
+
+                $(".fa-save").show();
+            });
         });
     </script>
 {% endblock %}

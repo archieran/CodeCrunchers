@@ -3,6 +3,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 from django.contrib import messages
+from graphos.renderers.base import BaseChart
+from graphos.renderers.highcharts import BaseHighCharts
 from social_django.models import UserSocialAuth
 from .models import Profile
 from evaluation.models import ContestParticipant
@@ -83,7 +85,7 @@ def dashboard(request):
     #data_source = ModelDataSource(query_set, fields=['user', 'experience_points', 'experience_points'],)
     row = list()
     data = list()
-    data.append(['Submissions', 'Language'])
+    data.append(['Langages', 'Submisions'])
     for query in query_set:
         languages = ConsoleLanguage.objects.filter(id = query.values()[0])
         for language in languages:
@@ -93,13 +95,28 @@ def dashboard(request):
         data.append(row)
         row = list()
     print data
-    data.append(['c', '5'])
+    #data.append(['c', '5']) not needed for production
 
     data_matrix =  [
             data
         ]
     data_source = SimpleDataSource(data=data)
-    chart = morris.DonutChart(data_source)
+    # chart = morris.DonutChart(data_source)
+    xAxis =  {
+            'labels':{
+                'x':-10
+            }
+    }
+    options = {
+        'title':'Language wise submissions',
+        'subtitle': "Total submissions: " + str(Submission.objects.count()),
+        'colorByPoint':True,
+        'allowPointSelect': True,
+        'xAxis':xAxis,
+
+    }
+    chart = highcharts.DonutChart(data_source, options=options)
+    chart.html_id = "languagesubmissions"
     context = {
         'chart':chart,
         'active_tab':'dashboard',
