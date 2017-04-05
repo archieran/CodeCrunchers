@@ -1,7 +1,43 @@
 {% extends 'www/base.html' %}
 
 {% block content %}
-    <div class="container">
-        <h1>Profile</h1>
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
+        <div class="container-fluid">
+            <h1>Profile</h1>
+
+            <div class="row">
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered panel">
+                        <thead>
+                        <tr>
+                            <th>
+                                Problem
+                            </th>
+                            <th>
+                                Max Score
+                            </th>
+                            <th>
+                                Achieved Score
+                            </th>
+                        </tr>
+
+                        </thead>
+                        {% for submission in submissions %}
+                            <tr>
+                                <td>{{ submission.prob }}</td>
+                                <td>{{ submission.prob.reward_points }}</td>
+                                <td>{{ submission.achieved_score }}</td>
+                                <td>{{ submission.attempted }}</td>
+                                {% if submission.achieved_score == submission.prob.reward_points %}
+                                    <td><a class="btn btn-success" href="{% url 'ev:model_solution' submission.prob.id %}">Model Solution</a></td>
+                                {% else %}
+                                    <td><a class="btn btn-primary" href="{% url 'ev:evcode' submission.prob.id %}">Solve again</a> </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}

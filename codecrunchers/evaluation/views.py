@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import HttpResponse
 from django.shortcuts import Http404
 from django.conf import settings
+from django.urls import reverse
 from .models import Topic, Problem, ConsoleLanguage, Submission, TestCaseResult, Contest, ContestParticipant
 from hackerrank.HackerRankAPI import HackerRankAPI
 from django.utils import timezone
@@ -9,7 +10,7 @@ from .models import TestCase
 from django.contrib.auth.models import User
 from django.db.models import Max, Aggregate, Sum
 import json
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 
 # Begin Coding from here
 
@@ -279,3 +280,8 @@ def run_submission(request):
     # print source_code
 
     return HttpResponse(js, content_type='application/json')
+
+def redirect_model_solution(request, prob_id):
+    print prob_id
+    request.session["model_sol_id"] = prob_id
+    return HttpResponseRedirect(reverse('cc:console'))

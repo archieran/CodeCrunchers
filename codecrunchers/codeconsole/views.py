@@ -5,14 +5,25 @@ from hackerrank.HackerRankAPI import HackerRankAPI
 from django.conf import settings
 from .models import ConsoleLanguage, SavedCode
 from django.contrib.auth.decorators import login_required
+from evaluation.models import Problem
 from django.http import HttpResponseForbidden
 # Create your views here.
 
 @login_required
 def console(request):
     context = {}
+    id =  request.session["model_sol_id"]
+    display_model = False
+    if id:
+        code = Problem.objects.filter(id = id)[0].model_solution
+        print str(code)
+        display_model = True
+        context["display_model"] = True
+        context["code"] = code
+
     context["languages"] = ConsoleLanguage.objects.filter(is_active=True)
     context["active_tab"] = 'console'
+
     return render(request, 'codeconsole/console.html', context)
 
 def runcode(request):

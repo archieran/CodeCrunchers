@@ -35,10 +35,11 @@
                 <div class="well text-justify">
                     To provide runtime input to the program, use the below given textbox.
                 </div>
-               <span class="h3"> <span class="label label-primary" id="saveTime"></span></span><i class="fa fa-cloud-upload btn fa-2x pull-right" id="btnSaveCode"> Save</i>
+                <span class="h3"> <span class="label label-primary" id="saveTime"></span></span><i
+                    class="fa fa-cloud-upload btn fa-2x pull-right" id="btnSaveCode"> Save</i>
                 <br><br>
 
-                <div id="editor">print("Hello world")
+                <div id="editor">print("Hello")
                 </div>
                 <br>
 
@@ -180,7 +181,7 @@
                 type: "POST",
                 url: "{% url 'cc:update_live_code' %}",
                 data: {
-                    "code":code,
+                    "code": code,
                     "csrfmiddlewaretoken": "{{csrf_token}}",
                 },
                 success: function (data) {

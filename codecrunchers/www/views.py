@@ -1,3 +1,4 @@
+from django.db.models.functions import TruncMonth
 from django.shortcuts import HttpResponse, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
@@ -65,9 +66,10 @@ def password(request):
     return render(request, 'www/password.html', {form:'form'})
 
 def profile(request):
-    submissions = Submission.objects.filter(sub_made_by = request.user)
-    print submissions
+    subs = Submission.objects.filter(sub_made_by = request.user).order_by('-attempted')[:10]
+
     context = {
+        'submissions':subs,
         'active_tab':'profile'
     }
     return render(request, 'www/profile.html',context)
@@ -107,7 +109,7 @@ def dashboard(request):
         'subtitle': "Total submissions: " + str(Submission.objects.count()),
 
     }
-    chart_language = highcharts.BarChart(data_source, options=options)
+    chart_language = highcharts.PieChart(data_source, options=options)
     chart_language.html_id = "languagesubmissions"
     # Preparing chart for problem difficulty levels
     query_set = Problem.objects.all().values('difficulty').annotate(difficulty_count = Count('difficulty'))
@@ -127,7 +129,7 @@ def dashboard(request):
         'subtitle': "Total Problems: " + str(Problem.objects.count()),
 
     }
-    chart_difficulty = highcharts.BarChart(data_source, options=options)
+    chart_difficulty = highcharts.PieChart(data_source, options=options)
     context = {
         'chart_language':chart_language,
         'chart_difficulty':chart_difficulty,
