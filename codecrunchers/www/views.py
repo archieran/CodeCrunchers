@@ -107,7 +107,7 @@ def dashboard(request):
         'subtitle': "Total submissions: " + str(Submission.objects.count()),
 
     }
-    chart_language = highcharts.PieChart(data_source, options=options)
+    chart_language = highcharts.BarChart(data_source, options=options)
     chart_language.html_id = "languagesubmissions"
     # Preparing chart for problem difficulty levels
     query_set = Problem.objects.all().values('difficulty').annotate(difficulty_count = Count('difficulty'))
@@ -127,7 +127,7 @@ def dashboard(request):
         'subtitle': "Total Problems: " + str(Problem.objects.count()),
 
     }
-    chart_difficulty = highcharts.PieChart(data_source, options=options)
+    chart_difficulty = highcharts.BarChart(data_source, options=options)
     context = {
         'chart_language':chart_language,
         'chart_difficulty':chart_difficulty,
