@@ -7,19 +7,22 @@
         <script src="http://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
         <script src="http://cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js"></script>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/css/highcharts.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/highcharts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/highcharts.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/js/modules/exporting.js"></script>
         <style>
             .graph_holder{
                 width:50%;
             }
-        #languagesubmissions{
+        #languagesubmissions, #difficultychart{
             max-width: 300px;
         }
         </style>
         <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
             <h1>Dashboard</h1>
             <div class="graph_holder">
-                {{ chart.as_html }}
+                {{ chart_language.as_html }}
+                <br>
+                {{ chart_difficulty.as_html }}
                 </div>
         </div>
 {% endblock %}

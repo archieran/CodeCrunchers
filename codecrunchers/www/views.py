@@ -9,7 +9,7 @@ from social_django.models import UserSocialAuth
 from .models import Profile
 from evaluation.models import ContestParticipant
 from django.contrib.auth.models import User
-from evaluation.models import Submission, ConsoleLanguage
+from evaluation.models import Submission, ConsoleLanguage, Problem
 from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import morris, highcharts
 from django.db.models import Max, Aggregate, Sum, Count
@@ -102,24 +102,46 @@ def dashboard(request):
         ]
     data_source = SimpleDataSource(data=data)
     # chart = morris.DonutChart(data_source)
-    xAxis =  {
-            'labels':{
-                'x':-10
-            }
-    }
     options = {
         'title':'Language wise submissions',
         'subtitle': "Total submissions: " + str(Submission.objects.count()),
-        'colorByPoint':True,
-        'allowPointSelect': True,
-        'xAxis':xAxis,
 
     }
-    chart = highcharts.DonutChart(data_source, options=options)
-    chart.html_id = "languagesubmissions"
+    chart_language = highcharts.PieChart(data_source, options=options)
+    chart_language.html_id = "languagesubmissions"
+    # Preparing chart for problem difficulty levels
+    query_set = Problem.objects.all().values('difficulty').annotate(difficulty_count = Count('difficulty'))
+    print query_set
+    data = list()
+    row = list()
+    data.append(['Difficulty', 'Problem Count'])
+    for query in query_set:
+        row.append(get_difficulty_verbose(query['difficulty']))
+        row.append(query['difficulty_count'])
+        data.append(row)
+        row = list()
+    print data
+    data_source = SimpleDataSource(data)
+    options = {
+        'title':'Problem distribution : Difficulty wise',
+        'subtitle': "Total Problems: " + str(Problem.objects.count()),
+
+    }
+    chart_difficulty = highcharts.PieChart(data_source, options=options)
     context = {
-        'chart':chart,
+        'chart_language':chart_language,
+        'chart_difficulty':chart_difficulty,
         'active_tab':'dashboard',
     }
-
+    chart_difficulty.html_id = "difficultychart"
     return render(request, 'www/dashboard.html', context)
+
+def get_difficulty_verbose(c):
+    if c == 'E':
+        return "Easy"
+    elif c == "M":
+        return "Medium"
+    elif c == "H":
+        return "Hard"
+    else:
+        return "Expert"
