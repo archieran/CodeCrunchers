@@ -39,7 +39,7 @@
                     class="fa fa-cloud-upload btn fa-2x pull-right" id="btnSaveCode"> Save</i>
                 <br><br>
 
-                <div id="editor">print("Hello")
+                <div id="editor">{% if display_model %}{{ problem.model_solution }}{% endif %}
                 </div>
                 <br>
 

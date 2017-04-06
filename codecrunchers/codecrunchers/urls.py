@@ -27,7 +27,7 @@ admin.site.index_title = settings.ADMIN_INDEX_TITLE
 admin.site.site_title = settings.ADMIN_SITE_TITLE
 urlpatterns = [
     #url(r'^$', include('www.urls')),
-    url(r'^$', www.views.index),
+    url(r'^$', www.views.index, name='sitehome'),
 	url(r'^jet/', include('jet.urls', 'jet')),  # Django JET URLS
     url(r'^admin/', admin.site.urls),
     url(r'^console/', include('codeconsole.urls', 'cc')),

@@ -12,14 +12,16 @@ from django.http import HttpResponseForbidden
 @login_required
 def console(request):
     context = {}
-    id =  request.session["model_sol_id"]
+    try:
+        id =  request.session["model_sol_id"]
+    except:
+        pass
     display_model = False
     if id:
-        code = Problem.objects.filter(id = id)[0].model_solution
-        print str(code)
+        problem = Problem.objects.filter(id = id)[0]
         display_model = True
         context["display_model"] = True
-        context["code"] = code
+        context["problem"] = problem
 
     context["languages"] = ConsoleLanguage.objects.filter(is_active=True)
     context["active_tab"] = 'console'

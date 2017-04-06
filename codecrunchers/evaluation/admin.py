@@ -32,6 +32,7 @@ class SubmissionAdmin(admin.ModelAdmin):
     list_display = ['id', 'sub_made_by', 'prob', 'submitted_code', 'achieved_score', 'total_memory_used', 'total_execution_time', 'lang', 'attempted']
     list_filter = ['lang__lang']
     search_fields = ['sub_made_by__username', 'prob__title']
+    list_per_page = 25
 
 class TopicAdmin(admin.ModelAdmin):
     list_display = ['topic_name']
