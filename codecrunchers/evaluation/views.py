@@ -61,10 +61,13 @@ def contest_home(request):
 
 def contest_details(request, contest_id):
     problems = Problem.objects.all().filter(contest__id = contest_id)
-    print problems
+    contest = Contest.objects.filter(id = contest_id)[0]
+    print contest
     context = {
+        'contest_name':contest,
         'problems': problems,
-        'contest' : contest_id,
+        'contest_id' : contest_id,
+        'active_tab':'prac_home'
     }
     return render(request, 'evaluation/contest_details.html', context)
 

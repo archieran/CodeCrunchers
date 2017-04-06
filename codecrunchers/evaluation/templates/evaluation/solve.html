@@ -21,16 +21,17 @@
         }
     </style>
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
-        <h2>{{ challenge.title }}
+        <h2>Title: {{ challenge.title }}
             <small> by <u>{{ challenge.creator.first_name }} {{ challenge.creator.last_name }}</u> in</small>
             <a href="{% url 'ev:topic_probs' challenge.topic.id %}"
                class="btn btn-default">{{ challenge.topic }}</a>
         </h2>
-        <h5>Experience Points: {{ challenge.reward_points }}</h5>
-
-        <div>Description:<p class="text-primary text-justify">{{ challenge.desc }}</p>
+            <h4>Experience Points: <span class="fa fa-trophy fa-2x"></span> {{ challenge.reward_points }}<span class="pull-right">Difficulty: {{ challenge.get_difficulty_verbose }}</span></h4>
+        Description:
+        <div class="well"><p class="text-primary text-justify">{{ challenge.desc }}
         </div>
-        <div>Constraints:<p class="text-danger text-justify">{{ challenge.constraints }}</p>
+        Constraints:
+        <div class="well"><p class="text-danger text-justify">{{ challenge.constraints }}</p>
         </div>
         Input Format:
         <div class="well">

@@ -2,7 +2,7 @@
 
 {% block content %}
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
-        <h1>Problems</h1>
+        <h1>{{ contest_name }}</h1>
         <div class="table-responsive">
         <table class="table table-hover table-bordered table-responsive panel text-center">
         	<th class="panel-title text-center">Problem</th>
@@ -12,7 +12,7 @@
         <tr>
         	<td>{{ problem.title }}</td>
         	<td>{{ problem.reward_points }}</td>
-            <td><a href="{% url 'ev:evcode' problem.id %}?for={{ contest }}" class="btn btn-primary">Attempt</a></td>
+            <td><a href="{% url 'ev:evcode' problem.id %}?for={{ contest_id }}" class="btn btn-primary">Attempt</a></td>
         </tr>
         {% endfor %}
         </table>

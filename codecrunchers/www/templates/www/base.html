@@ -129,23 +129,31 @@
             position: static;
             font-family: 'Pacifico', cursive;
         }
-        a:hover{
+
+        a:hover {
             text-decoration: none;
         }
-        a{
+
+        a {
             text-decoration: none;
         }
+
         {#     End of logo header   #}
         .container-fluid .container {
-    padding-left:0;
-    padding-right:0;
-}
+            padding-left: 0;
+            padding-right: 0;
+        }
+        hr{
+            background-color: #66cc99;
+            height: 3px;
+        }
     </style>
 
 </head>
 <body>
 <header role="banner">
-    <h1 id="logo-main" class="text-center"><a href="{% url 'sitehome' %}">Code <i class="fa fa-code"></i> Crunchers</a><span class="h3"><small>Beta</small></span></h1>
+    <h1 id="logo-main" class="text-center"><a href="{% url 'sitehome' %}">Code <i class="fa fa-code"></i>
+        Crunchers</a><span class="h3"><small>Beta</small></span></h1>
 
 </header>
 <div class="container">
@@ -187,11 +195,11 @@
                 <div class="profile-usermenu">
                     <ul class="nav">
                         {% if user.is_authenticated %}
-                        <li class="{% if active_tab == 'profile' %}active{% endif %}">
-                            <a href="{% url 'profile' %}">
-                                <i class="glyphicon glyphicon-user"></i>
-                                Profile </a>
-                        </li>
+                            <li class="{% if active_tab == 'profile' %}active{% endif %}">
+                                <a href="{% url 'profile' %}">
+                                    <i class="glyphicon glyphicon-user"></i>
+                                    Profile </a>
+                            </li>
                         {% endif %}
                         <li class="{% if active_tab == 'leaderboard' %}active{% endif %}">
                             <a href="{% url 'leaderboard' %}">
@@ -232,13 +240,13 @@
                         {% endif %}
                         <li>
                             {% if user.is_authenticated %}
-                            <a href="{% url 'auth_logout' %}">
-                                <i class="glyphicon glyphicon-log-out"></i>
-                                Sign Out</a>
+                                <a href="{% url 'auth_logout' %}">
+                                    <i class="glyphicon glyphicon-log-out"></i>
+                                    Sign Out</a>
                             {% else %}
-                            <a href="{% url 'auth_login' %}">
-                                <i class="glyphicon glyphicon-log-in"></i>
-                                Sign In</a>
+                                <a href="{% url 'auth_login' %}">
+                                    <i class="glyphicon glyphicon-log-in"></i>
+                                    Sign In</a>
                             {% endif %}
                         </li>
                     </ul>
@@ -256,10 +264,10 @@
     </div>
 
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
-<hr>
-<footer class="text-center">
-    <h4 id="logo-main">&copy; 2017 Code <i class="fa fa-code"></i> crunchers</h4>
-</footer>
+    <hr>
+    <footer class="text-center">
+        <h4 id="logo-main">&copy; 2017 Code <i class="fa fa-code"></i> crunchers</h4>
+    </footer>
 </div>
 
 <script>

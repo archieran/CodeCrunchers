@@ -12,6 +12,7 @@ from django.http import HttpResponseForbidden
 @login_required
 def console(request):
     context = {}
+    id = False
     try:
         id =  request.session["model_sol_id"]
     except:
