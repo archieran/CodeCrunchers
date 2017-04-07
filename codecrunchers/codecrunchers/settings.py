@@ -26,7 +26,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = "qwh8alxn=y2dty*e1)b1c50gt^)3^clfizlr#+6k=!zg^hnots"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Application definition
 
@@ -153,7 +153,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 HACKERRANK_API = "hackerrank|367089-1178|7da8ea2429c4ee578e2a9632b3b4d6c780448124"
 
 # Login Settings
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile'
 
 ACCOUNT_ACTIVATION_DAYS = 7
 

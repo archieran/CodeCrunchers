@@ -66,11 +66,48 @@ def password(request):
     return render(request, 'www/password.html', {form:'form'})
 
 def profile(request):
-    subs = Submission.objects.filter(sub_made_by = request.user).order_by('-attempted')[:10]
+    query_set = Submission.objects.select_related().filter(sub_made_by = request.user).values('prob__difficulty').annotate(subcount = Count('prob__difficulty'))
+    print query_set
+    options = {
+        'title':'Difficulty wise submissions',
+        'subtitle': "Total submissions: " + str(Submission.objects.filter(sub_made_by = request.user).count()),
+    }
+    data = list()
+    row = list()
+    data.append(['Difficulty', 'submissions'])
+    for query in query_set:
+        row.append(get_difficulty_verbose(query['prob__difficulty']))
+        row.append(query['subcount'])
+        data.append(row)
+        row = list()
+    print data
+    data_source = SimpleDataSource(data)
+    chart = highcharts.PieChart(data_source, options=options)
+    chart.html_id = "difficultychart"
+    # Other chart
+    query_set = Submission.objects.select_related().filter(sub_made_by = request.user).values('prob__topic__topic_name').annotate(count = Count('prob__topic__topic_name'))
+    options = {
+        'title':'Topic wise submissions',
+        'subtitle': "Total submissions: " + str(Submission.objects.filter(sub_made_by = request.user).count()),
+    }
+    row = list()
+    data = list()
+    data.append(['Topic', 'Submissions'])
+    for query in query_set:
+        row.append(query['prob__topic__topic_name'])
+        row.append(query['count'])
+        data.append(row)
+        row = list()
+    data_source = SimpleDataSource(data)
+    topic_chart = highcharts.PieChart(data_source, options=options)
+    topic_chart.html_id = "otherchart"
 
+    subs = Submission.objects.filter(sub_made_by = request.user).order_by('-attempted')[:10]
     context = {
+        'topic_chart':topic_chart,
+        'chart':chart,
         'submissions':subs,
-        'active_tab':'profile'
+        'active_tab':'profile',
     }
     return render(request, 'www/profile.html',context)
 

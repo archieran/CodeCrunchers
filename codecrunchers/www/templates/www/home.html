@@ -9,9 +9,9 @@
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"/>
 
-    {# Font-awesome  #}
+    <!--{# Font-awesome  #}
     <link rel="stylesheet" type="text/css"
-          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
 
     {#JQuery#}
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -21,6 +21,7 @@
 
     <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
 
+    <link href="https://fonts.googleapis.com/css?family=Oxygen" rel="stylesheet">
     <style type="text/css">
         /* Remove the navbar's default margin-bottom and rounded borders */ 
     .navbar {
@@ -38,6 +39,11 @@
       width: 100%; /* Set width to 100% */
       margin: auto;
       min-height:200px;
+    }
+
+    body{
+      font-family: 'Oxygen', sans-serif;
+      background-color: #E7E7DE;
     }
 
     /* Hide the carousel text when the screen is less than 600 pixels wide */
@@ -91,15 +97,15 @@
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
       <div class="item active">
-        <img src="https://placehold.it/1200x400?text=IMAGE" alt="Image">
+        <img src="https://d31v04zdn5vmni.cloudfront.net/blog/wp-content/uploads/2012/02/featured-image-snippets-1-690x362.png" style="width:70%" alt="Image">
         <div class="carousel-caption">
-          <h3>Sell $</h3>
-          <p>Money Money.</p>
+          <h3>Practice Coding</h3>
+          
         </div>      
       </div>
 
       <div class="item">
-        <img src="https://placehold.it/1200x400?text=Another Image Maybe" alt="Image">
+        <img src="https://blog.jetbrains.com/dotnet/files/2010/07/image-thumb23.png" alt="Image">
         <div class="carousel-caption">
           <h3>More Sell $</h3>
           <p>Lorem ipsum...</p>
@@ -119,23 +125,23 @@
 </div>
   
 <div class="container text-center">    
-  <h3>What We Do</h3><br>
+  <h3>What We Code</h3><br>
   <div class="row">
-    <div class="col-sm-4">
-      <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">
-      <p>Current Project</p>
+    <div class="col-sm-3">
+      <img src="https://www.sololearn.com/Icons/Courses/1073.png" class="img-responsive" style="width:100%" alt="Image">
+      <h1>Python</h1>
     </div>
-    <div class="col-sm-4"> 
-      <img src="https://placehold.it/150x80?text=IMAGE" class="img-responsive" style="width:100%" alt="Image">
-      <p>Project 2</p>    
+    <div class="col-sm-3"> 
+      <img src="https://www.sololearn.com/Icons/Courses/1068.png" class="img-responsive" style="width:100%" alt="Image">
+      <h1>Java</h1>    
     </div>
-    <div class="col-sm-4">
-      <div class="well">
-       <p>Some text..</p>
-      </div>
-      <div class="well">
-       <p>Some text..</p>
-      </div>
+    <div class="col-sm-3">
+      <img src="https://www.sololearn.com/Icons/Courses/1075.png" class="img-responsive" style="width:100%" alt="Image">
+      <h1>Swift</h1>
+    </div>
+    <div class="col-sm-3">
+      <img src="https://www.sololearn.com/Icons/Courses/1081.png" class="img-responsive" style="width:100%" alt="Image">
+      <h1>Ruby</h1>
     </div>
   </div>
 </div><br>
