@@ -5,62 +5,82 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/highcharts.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highcharts/5.0.10/js/modules/exporting.js"></script>
     <style>
-    #difficultychart, #otherchart {
+        #difficultychart, #otherchart {
             max-width: 285px;
             padding-top: 10px;
+            padding-bottom: 20px;
+        }
+
+        #monthlychart {
+
+            max-width: 700px;
         }
     </style>
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
         <div class="container-fluid">
-        <h1>Profile</h1>
+            <h1>Analytics</h1>
+
             <div class="row">
 
-            <div class="col col-lg-4 col-md-4 col-xs-12">
-                {{ chart.as_html }}
+                <div class="col col-lg-4 col-md-4 col-xs-12">
+                    {{ chart.as_html }}
+                </div>
+                <div class="col col-lg-4 col-lg-offset-2 col-md-4 col-md-offset-3 col-xs-12">
+                    {{ topic_chart.as_html }}
+                </div>
+
             </div>
-            <div class="col col-lg-4 col-lg-offset-2 col-md-4 col-md-offset-2 col-xs-12">
-            {{ topic_chart.as_html }}
-            </div>
+
+            <div class="row">
+
+                <div class="col col-lg-12 col-md-12 col-sm-12">
+                    <div class="table-responsive">
+                        {{ monthly_chart.as_html }}
+                    </div>
+                </div>
 
             </div>
             <h2>Recent Submissions</h2>
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered panel text-center">
-                        <thead>
-                        <tr>
-                            <th class="panel-title text-center">
-                                Problem
-                            </th>
-                            <th class="panel-title text-center">
-                                Max Score
-                            </th>
-                            <th class="panel-title text-center">
-                                Achieved Score
-                            </th>
-                                                        <th class="panel-title text-center">
-                                Attempted
-                            </th>
-                                                        <th class="panel-title text-center">
-                                Links
-                            </th>
-                        </tr>
 
-                        </thead>
-                        {% for submission in submissions %}
-                            <tr>
-                                <td>{{ submission.prob }}</td>
-                                <td>{{ submission.prob.reward_points }}</td>
-                                <td>{{ submission.achieved_score }}</td>
-                                <td>{{ submission.attempted }}</td>
-                                {% if submission.achieved_score == submission.prob.reward_points %}
-                                    <td><a class="btn btn-success" href="{% url 'ev:model_solution' submission.prob.id %}">Solution</a></td>
-                                {% else %}
-                                    <td><a class="btn btn-danger" href="{% url 'ev:evcode' submission.prob.id %}">Retry</a> </td>
-                                {% endif %}
-                            </tr>
-                        {% endfor %}
-                    </table>
-                </div>
+            <div class="table-responsive">
+                <table class="table table-hover table-bordered panel text-center">
+                    <thead>
+                    <tr>
+                        <th class="panel-title text-center">
+                            Problem
+                        </th>
+                        <th class="panel-title text-center">
+                            Max Score
+                        </th>
+                        <th class="panel-title text-center">
+                            Achieved Score
+                        </th>
+                        <th class="panel-title text-center">
+                            Attempted
+                        </th>
+                        <th class="panel-title text-center">
+                            Links
+                        </th>
+                    </tr>
+
+                    </thead>
+                    {% for submission in submissions %}
+                        <tr>
+                            <td>{{ submission.prob }}</td>
+                            <td>{{ submission.prob.reward_points }}</td>
+                            <td>{{ submission.achieved_score }}</td>
+                            <td>{{ submission.attempted }}</td>
+                            {% if submission.achieved_score == submission.prob.reward_points %}
+                                <td><a class="btn btn-success" href="{% url 'ev:model_solution' submission.prob.id %}">Solution</a>
+                                </td>
+                            {% else %}
+                                <td><a class="btn btn-danger" href="{% url 'ev:evcode' submission.prob.id %}">Retry</a>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
+        </div>
     </div>
 {% endblock %}

@@ -1,4 +1,5 @@
-from django.db.models.functions import TruncMonth
+from calendar import calendar
+from django.db.models.functions import TruncMonth, Extract
 from django.shortcuts import HttpResponse, render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
@@ -15,7 +16,7 @@ from graphos.sources.model import ModelDataSource, SimpleDataSource
 from graphos.renderers import morris, highcharts
 from django.db.models import Max, Aggregate, Sum, Count
 from graphos.renderers.gchart import LineChart
-
+from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay, ExtractWeekDay
 # Create your views here.
 def index(request):
     # return  HttpResponse("<h1>YASH<h1>")
@@ -65,7 +66,9 @@ def password(request):
     
     return render(request, 'www/password.html', {form:'form'})
 
+@login_required()
 def profile(request):
+    # Difficulty wise submissions pie chart
     query_set = Submission.objects.select_related().filter(sub_made_by = request.user).values('prob__difficulty').annotate(subcount = Count('prob__difficulty'))
     print query_set
     options = {
@@ -82,9 +85,9 @@ def profile(request):
         row = list()
     print data
     data_source = SimpleDataSource(data)
-    chart = highcharts.PieChart(data_source, options=options)
+    chart = highcharts.ColumnChart(data_source, options=options)
     chart.html_id = "difficultychart"
-    # Other chart
+    # Topic wise submissions pie chart
     query_set = Submission.objects.select_related().filter(sub_made_by = request.user).values('prob__topic__topic_name').annotate(count = Count('prob__topic__topic_name'))
     options = {
         'title':'Topic wise submissions',
@@ -101,10 +104,29 @@ def profile(request):
     data_source = SimpleDataSource(data)
     topic_chart = highcharts.PieChart(data_source, options=options)
     topic_chart.html_id = "otherchart"
-
+    # Other chart
+    query_set = Submission.objects.select_related().filter(sub_made_by = request.user).annotate(month = TruncMonth('attempted')).values('month').annotate(submissions = Count('id'))[:12]
+    options = {
+        'title':'Monthly  submissions',
+        'subtitle': "Total submissions: " + str(Submission.objects.filter(sub_made_by = request.user).count()),
+    }
+    data = list()
+    data.append(['Month', 'Submissions'])
+    for query in  query_set:
+        count  = query['submissions']
+        month = str(query['month'].strftime('%B')) + ", " +  str(query['month'].strftime('%Y'))
+        row.append(month)
+        row.append(count)
+        data.append(row)
+        row = list()
+    print data
+    data_source = SimpleDataSource(data)
+    monthly_chart = highcharts.LineChart(data_source, options = options)
+    monthly_chart.html_id = 'monthlychart'
     subs = Submission.objects.filter(sub_made_by = request.user).order_by('-attempted')[:10]
     context = {
         'topic_chart':topic_chart,
+        'monthly_chart':monthly_chart,
         'chart':chart,
         'submissions':subs,
         'active_tab':'profile',
@@ -166,7 +188,7 @@ def dashboard(request):
         'subtitle': "Total Problems: " + str(Problem.objects.count()),
 
     }
-    chart_difficulty = highcharts.PieChart(data_source, options=options)
+    chart_difficulty = highcharts.ColumnLineChart(data_source, options=options)
     context = {
         'chart_language':chart_language,
         'chart_difficulty':chart_difficulty,

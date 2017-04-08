@@ -3,7 +3,7 @@
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
     <h1>Leaderboard</h1>
         <div class="table-responsive">
-        <table class="table table-hover table-bordered panel text-center">
+        <table class="table table-bordered panel text-center">
             <thead>
             <tr>
             <th class="panel-title text-center">Rank</th>
@@ -13,7 +13,12 @@
            </tr>
             </thead>
         {% for user in users %}
-            <tr>
+            {% if user == request.user %}
+                <tr class="btn-success">
+            {% else %}
+                <tr>
+            {% endif %}
+
                 <td>{{forloop.counter}}</td>
                 <td><img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="50" width="50" id="prof-pic"/></td>
                 <td>{{ user.username }}</td>
