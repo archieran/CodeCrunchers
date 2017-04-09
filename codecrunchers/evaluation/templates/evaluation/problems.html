@@ -2,18 +2,19 @@
 
 {% block content %}
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
-        <h1>Topic : {{ topic }}</h1>
-        <table class="table table-hover table-responsive panel">
-            <th class="panel-title">Problem</th>
-            <th class="panel-title">Difficulty</th>
-            <th class="panel-title">Points</th>
-            <th></th>
+        <h2>Topic : {{ topic }}</h2>
+        <hr>
+        <table class="table table-hover table-responsive panel text-center">
+            <th class="panel-title text-center">Problem</th>
+            <th class="panel-title text-center">Difficulty</th>
+            <th class="panel-title text-center">Points</th>
+            <th class="panel-title text-center">Link</th>
             {% for problem in problems %}
                 <tr>
                     <td>{{ problem.title }}</td>
                     <td>{{ problem.get_difficulty_verbose }}</td>
                     <td>{{ problem.reward_points }}</td>
-                    <td class="text-right"><a href="{% url 'ev:evcode' problem.id %}" class="btn btn-primary">Solve</a>
+                    <td><a href="{% url 'ev:evcode' problem.id %}" class="btn btn-primary">Solve</a>
                     </td>
                 </tr>
             {% endfor %}

@@ -30,3 +30,6 @@ class Profile(models.Model):
     experience_points = models.IntegerField(default=0, verbose_name="Experience Points")
     def __unicode__(self):
         return self.user.username
+
+    def get_usertype_verbose(self):
+        return dict(self.USER_TYPES).get(self.user_type)

@@ -16,8 +16,6 @@
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     {#JQuery#}
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    {#IntercoolerJS - AJAX on Steroids #}
-    <script src="http://cdn.intercoolerjs.org/intercooler-1.1.0.min.js"></script>
     <link rel="stylesheet" type="text/css" href="{% static 'base/UserProfile.css' %}"/>
     <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet"/>
     <style type="text/css">
@@ -144,6 +142,11 @@
             padding-right: 0;
         }
         hr{
+            #background-color: #66cc99;
+            background-color: #4B77BE;
+            height: 2px;
+        }
+        .singlehr{
             background-color: #66cc99;
             height: 3px;
         }
@@ -157,7 +160,7 @@
 
 </header>
 <div class="container">
-    <hr>
+    <hr class="singlehr">
     <div class="row profile">
         <div class="col-md-3 col-lg-3 col-sm-4 col-xs-12">
             <div class="profile-sidebar">
@@ -182,7 +185,7 @@
                         {% endif %}
                     </div>
                     <div class="profile-usertitle-job">
-                        <span id="compName"></span>
+                        <span id="compName">{{ user.profile.get_usertype_verbose }}</span>
                     </div>
                     <div>
                         <i class="fa fa-trophy fa-2x"></i>
@@ -264,7 +267,7 @@
     </div>
 
     <a href="javascript:" id="return-to-top"><i class="fa fa-arrow-up"></i></a>
-    <hr>
+    <hr class="singlehr">
     <footer class="text-center">
         <h4 id="logo-main">&copy; 2017 Code <i class="fa fa-code"></i> crunchers</h4>
     </footer>
