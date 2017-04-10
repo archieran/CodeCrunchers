@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'evaluation',
     'social_django',
     'graphos',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE_CLASSES = [

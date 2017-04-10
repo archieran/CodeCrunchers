@@ -1,7 +1,22 @@
 {% extends 'www/base.html' %}
 {% block content %}
+    
+    <!-- -->
+    <script>
+        (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.8&appId=276041826164974";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- -->
+
+    <div id="fb-root"></div>
     <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
     <h2>Leaderboard</h2>
+    <div id="shareBtn" class="btn btn-success clearfix">Share</div>
     <hr>
         <div class="table-responsive">
         <table class="table table-bordered panel text-center">
@@ -16,17 +31,33 @@
         {% for user in users %}
             {% if user == request.user %}
                 <tr class="btn-success">
+                <td>{{forloop.counter}}</td>
+                <td><img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="50" width="50" id="prof-pic"/></td>
+                <td>{{ user.username }}</td>
+                <td id="success-user">{{ user.profile.experience_points }}</td>
             {% else %}
                 <tr>
-            {% endif %}
-
                 <td>{{forloop.counter}}</td>
                 <td><img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="50" width="50" id="prof-pic"/></td>
                 <td>{{ user.username }}</td>
                 <td>{{ user.profile.experience_points }}</td>
+            {% endif %}
+
+                
             </tr>
         {% endfor %}
         </table>
         </div>
     </div>
+    <script>
+        document.getElementById('shareBtn').onclick = function() {
+        FB.ui({
+            method: 'share',
+            display: 'popup',
+            href: 'http://codecrunchers.herokuapp.com/',
+            app_id: '276041826164974',
+            quote: 'Beat My XP : ' + document.getElementById("success-user").innerHTML,
+        }, function(response){});
+        }
+    </script>
 {% endblock %}

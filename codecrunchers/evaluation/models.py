@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+from django.core.exceptions import ValidationError
 
 from django.db import models
 from django.contrib.auth.models import User
@@ -22,6 +23,10 @@ class Contest(models.Model):
 
     def __str__(self):
         return self.title
+    def clean(self):
+        if self.start_time > self.end_time:
+             raise ValidationError("Start Time cannot be greater than End Time")
+        super(Contest,self).clean()
 
 class Problem(models.Model):
     Expert = "X"

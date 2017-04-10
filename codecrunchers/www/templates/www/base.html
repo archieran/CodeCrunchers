@@ -2,8 +2,16 @@
 <html lang="en">
 <head>
     {% load staticfiles %}
+    {% load humanize %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
+
+    <meta property="og:url"           content="http://codecrunchers.herokuapp.com" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="Where Code is Religion" />
+    <meta property="og:description"   content="An online code programming website built totally in Python using Django" />
+    <meta property="og:image"         content="https://d31v04zdn5vmni.cloudfront.net/blog/wp-content/uploads/2012/02/featured-image-snippets-1-690x362.png" />
+
     <title>Code crunchers</title>
     {#Bootstrap4 css#}
     {#    <link rel="stylesheet" type="text/css" href="{% static 'bootstrap/css/bootstrap.min.css' %}"/>#}
