@@ -8,12 +8,13 @@ from hackerrank.HackerRankAPI import HackerRankAPI
 from django.utils import timezone
 from .models import TestCase
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Aggregate, Sum
 import json
 from django.http import JsonResponse, HttpResponseRedirect
 
 # Begin Coding from here
-
+@login_required
 def evaluationhome(request):
     topics = Topic.objects.all()
     context = {
@@ -22,7 +23,7 @@ def evaluationhome(request):
     }
     return render(request, 'evaluation/topics.html', context)
 
-
+@login_required
 def topic_problems(request, topic_var):
     try:
         probs = Problem.objects.select_related().filter(topic_id=topic_var)
@@ -35,7 +36,7 @@ def topic_problems(request, topic_var):
         raise Http404
     return render(request, 'evaluation/problems.html', context)
 
-
+@login_required
 def evaluate(request, prob_id):
     languages = ConsoleLanguage.objects.filter(is_active=True)
     challenge = Problem.objects.select_related().filter(id=prob_id)
@@ -50,7 +51,7 @@ def evaluate(request, prob_id):
     print context
     return render(request, 'evaluation/solve.html', context)
 
-
+@login_required
 def contest_home(request):
     contests = Contest.objects.filter(is_active=True)
     context = {
@@ -58,7 +59,7 @@ def contest_home(request):
         'contests': contests
     }
     return render(request, 'evaluation/contest_home.html', context)
-
+@login_required
 def contest_details(request, contest_id):
     problems = Problem.objects.all().filter(contest__id = contest_id)
     contest = Contest.objects.filter(id = contest_id)[0]
@@ -70,7 +71,7 @@ def contest_details(request, contest_id):
         'active_tab':'prac_home'
     }
     return render(request, 'evaluation/contest_details.html', context)
-
+@login_required
 def run_testcases(request):
     #code runs just fine, make sure that there is atleast one sample test cases to not let this view blow up
     API_KEY = settings.HACKERRANK_API
@@ -124,7 +125,7 @@ def run_testcases(request):
     print source_code
     
     return HttpResponse(js, content_type='application/json')
-
+@login_required
 def run_submission(request):
 
     # Variable Declarations
@@ -283,7 +284,7 @@ def run_submission(request):
     # print source_code
 
     return HttpResponse(js, content_type='application/json')
-
+@login_required
 def redirect_model_solution(request, prob_id):
     print prob_id
     request.session["model_sol_id"] = prob_id

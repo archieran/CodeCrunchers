@@ -23,10 +23,7 @@
             font-family: 'Pacifico', cursive;
         }
     </style>
-    {% if form.errors %}
 
-        <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
 
 
 
@@ -63,7 +60,11 @@
 
                                     <p class="text-center text-danger">Please login to continue</p>
                                 {% endif %}
+
                             {% endif %}
+                                {% if form.errors %}
+									<p class="text-center text-danger">Invalid Credentials</p>
+    							{% endif %}
                             </p>
                             <p class="bs-component">
                             <center>

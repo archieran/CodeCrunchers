@@ -70,7 +70,7 @@
                             <td>{{ submission.prob }}</td>
                             <td>{{ submission.prob.reward_points }}</td>
                             <td>{{ submission.achieved_score }}</td>
-                            <td>{{ submission.attempted | naturaltime }}</td>
+                            <td>{{submission.attempted }} ({{ submission.attempted | naturaltime }})</td>
                             {% if submission.achieved_score == submission.prob.reward_points %}
                                 <td><a class="btn btn-success" href="{% url 'ev:model_solution' submission.prob.id %}">Solution</a>
                                 </td>
