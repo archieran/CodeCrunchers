@@ -1,0 +1,37 @@
+{% extends 'www/base.html' %}
+
+{% block content %}
+    <div class="col col-lg-9 col-md-9 col-sm-8 col-xs-12">
+        <h2>Leaderboard : {{ contest_name }}</h2>
+        <hr>
+        <div class="table-responsive">
+            <table class="table table-bordered panel text-center">
+                <thead>
+                <th class="panel-title text-center">Rank</th>
+                <th class="panel-title text-center">User</th>
+                <th class="panel-title text-center">Username</th>
+                <th class="panel-title text-center">Points</th>
+                </thead>
+                {% for submission in submissions %}
+                    {% ifequal request.user submission.user %}
+                    <tr class="btn-success">
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center"><img src="{{ MEDIA_URL }}{{ submission.user.profile.user_avatar }}" height="50" width="50" id="prof-pic"/></td>
+                        <td class="text-center">{{ submission.user }}</td>
+                        <td class="text-center">{{ submission.achieved_score }}</td>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td class="text-center">{{ forloop.counter }}</td>
+                        <td class="text-center"><img src="{{ MEDIA_URL }}{{ submission.user.profile.user_avatar }}" height="50" width="50" id="prof-pic"/></td>
+                        <td class="text-center">{{ submission.user }}</td>
+                        <td class="text-center">{{ submission.achieved_score }}</td>
+                        </td>
+                    </tr>
+                    {% endifequal %}
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+{% endblock %}

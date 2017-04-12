@@ -44,9 +44,9 @@ class Problem(models.Model):
     title = models.CharField(max_length=255, null=False, blank=False, verbose_name="Title", help_text="Title of the problem")
     desc = models.TextField(max_length=65535, null=False, blank=False, verbose_name="Description",help_text="Brief description of the problem")
     model_solution = models.TextField(verbose_name="Model solution", help_text="Working solution for the problem in any language")
-    constraints = models.TextField(max_length=255, verbose_name="Constraints", help_text="Any constraints or steps to solve the problem")
-    input_format = models.TextField(max_length=255, verbose_name="Input format", help_text="Input the program will read")
-    output_format = models.TextField( max_length=255, verbose_name="Output format", help_text="Output the program will give")
+    constraints = models.TextField(max_length=65535, verbose_name="Constraints", help_text="Any constraints or steps to solve the problem")
+    input_format = models.TextField(max_length=65535, verbose_name="Input format", help_text="Input the program will read")
+    output_format = models.TextField( max_length=65535, verbose_name="Output format", help_text="Output the program will give")
     startup_code = models.TextField(max_length=65535, verbose_name="Initial code", help_text="Initial code to begin with")
     is_active = models.BooleanField(default=True, verbose_name="Active", help_text="Indicates whether the problem is active")
     difficulty = models.CharField(choices=PROB_DIFFICULTY_LEVELS, max_length=255, default=Easy, help_text="Difficulty level of the problem")
@@ -112,4 +112,4 @@ class ContestParticipant(models.Model):
             'contest',
         ]
     def __unicode__(self):
-        return str(self.contest)
+        return str(str(self.contest) + ":" + str(self.user))

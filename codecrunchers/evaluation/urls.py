@@ -13,5 +13,5 @@ urlpatterns = [
     url(r'run_testcases/$', views.run_testcases, name='run_testcases'),
     url(r'run_submission/$', views.run_submission, name='run_submission'),
     url(r'redirect_model_solution/(?P<prob_id>[0-9]+)/$', views.redirect_model_solution, name='model_solution'),
-
+    url(r'contestdetail/contestleaderboard/(?P<con_id>[0-9]+)/$', views.view_contest_leaderboard, name='contest_leaderboard'),
 ]

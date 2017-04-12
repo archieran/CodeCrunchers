@@ -289,3 +289,15 @@ def redirect_model_solution(request, prob_id):
     print prob_id
     request.session["model_sol_id"] = prob_id
     return HttpResponseRedirect(reverse('cc:console'))
+
+def view_contest_leaderboard(request, con_id):
+    print con_id
+    submissions = ContestParticipant.objects.filter(contest__id = con_id)
+    print submissions
+    context = {
+        'submissions':submissions,
+        'active_tab':'prac_home',
+        'contest_name':Contest.objects.get(id = con_id).title
+    }
+
+    return render(request, 'evaluation/contest_leaderboard.html', context)
