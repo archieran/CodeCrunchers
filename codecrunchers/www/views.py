@@ -1,6 +1,6 @@
 from calendar import calendar
 from django.db.models.functions import TruncMonth, Extract
-from django.shortcuts import HttpResponse, render, redirect
+from django.shortcuts import HttpResponse, render, redirect, HttpResponseRedirect, reverse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
@@ -17,6 +17,7 @@ from graphos.renderers import morris, highcharts
 from django.db.models import Max, Aggregate, Sum, Count
 from graphos.renderers.gchart import LineChart
 from django.db.models.functions import ExtractYear, ExtractMonth, ExtractDay, ExtractWeekDay
+from www.forms import ProfileForm
 # Create your views here.
 def index(request):
     # return  HttpResponse("<h1>YASH<h1>")
@@ -206,3 +207,25 @@ def get_difficulty_verbose(c):
         return "Hard"
     else:
         return "Expert"
+
+def create_profile(request):
+    if request.method == 'POST':
+        form = ProfileForm(request.POST, request.FILES)
+        user_profile, created = Profile.objects.get_or_create(user = request.user)
+        if form.is_valid():
+            user_type = form.cleaned_data['user_type']
+            user_profile.user_avatar = request.FILES.get('user_avatar')
+            user_profile.user_type = user_type
+            user_profile.user = request.user
+            user_profile.save()
+            print user_profile
+            # user_profile.save()
+            return HttpResponseRedirect(reverse('ev:evhome'))
+    else:
+        form = ProfileForm()
+        form.user = request.user
+    
+    context = {
+        'form':form,
+    }
+    return render(request,'www/create_profile.html',context)

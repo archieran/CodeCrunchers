@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Aggregate, Sum
 import json
 from django.http import JsonResponse, HttpResponseRedirect
+from www.models import Profile
 
 # Begin Coding from here
 @login_required
@@ -40,6 +41,10 @@ def topic_problems(request, topic_var):
 def evaluate(request, prob_id):
     languages = ConsoleLanguage.objects.filter(is_active=True)
     challenge = Problem.objects.select_related().filter(id=prob_id)
+    user_profile = Profile.objects.select_related().filter(user = request.user)
+    if len(user_profile) == 0:
+        return HttpResponseRedirect(reverse('create_profile'))
+        
     if len(challenge) == 0:
         # if received unknown value in url, raise 404
         raise Http404
@@ -125,9 +130,11 @@ def run_testcases(request):
     print source_code
     
     return HttpResponse(js, content_type='application/json')
+
+
 @login_required
 def run_submission(request):
-
+    
     # Variable Declarations
     API_KEY = settings.HACKERRANK_API
     source_code = request.POST.get("code")
