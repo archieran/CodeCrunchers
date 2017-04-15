@@ -67,7 +67,7 @@ def password(request):
     
     return render(request, 'www/password.html', {form:'form'})
 
-@login_required()
+@login_required
 def profile(request):
     # Difficulty wise submissions pie chart
     query_set = Submission.objects.select_related().filter(sub_made_by = request.user).values('prob__difficulty').annotate(subcount = Count('prob__difficulty'))
@@ -133,7 +133,7 @@ def profile(request):
         'active_tab':'profile',
     }
     return render(request, 'www/profile.html',context)
-
+@login_required
 def leaderboard(request):
     users = User.objects.all().order_by('-profile__experience_points')
     context = {
@@ -141,6 +141,7 @@ def leaderboard(request):
         'users':users,
     }
     return render(request, 'www/leaderboard.html',context)
+@login_required
 def dashboard(request):
     query_set = Submission.objects.all().values('lang').annotate(langcount = Count('lang'))
     print query_set
@@ -208,6 +209,7 @@ def get_difficulty_verbose(c):
     else:
         return "Expert"
 
+@login_required
 def create_profile(request):
     if request.method == 'POST':
         form = ProfileForm(request.POST, request.FILES)

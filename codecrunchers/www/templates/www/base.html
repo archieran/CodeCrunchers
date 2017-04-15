@@ -173,14 +173,27 @@
         <div class="col-md-3 col-lg-3 col-sm-4 col-xs-12">
             <div class="profile-sidebar">
                 <center>
-                    {% ifequal "profileimages/anonymous.jpg" user.profile.user_avatar %}
-                        <img src="https://home.questionbig.com/images/avatar_blank.png" height="100" width="100"
-                             id="prof-pic"/>
-                    {% else %}
-                        <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100"
-                             id="prof-pic"/>
 
-                    {% endifequal %}
+{#                    {% ifequal "profileimages/anonymous.jpg" user.profile.user_avatar %}#}
+{#                        <img src="https://home.questionbig.com/images/avatar_blank.png" height="100" width="100"#}
+{#                             id="prof-pic"/>#}
+{#                    {% else %}#}
+{#                        <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100"#}
+{#                             id="prof-pic"/>#}
+{##}
+{#                    {% endifequal %}#}
+                    {% ifnotequal "profileimages/anonymous.jpg" user.profile.user_avatar %}
+                        {% if user.profile %}
+                        <img src="{{ MEDIA_URL }}{{ user.profile.user_avatar }}" height="100" width="100"#}
+                             id="prof-pic"/>
+                            {% else %}
+                            <img src="https://home.questionbig.com/images/avatar_blank.png" height="100" width="100"#}
+                             id="prof-pic"/>
+                        {% endif %}
+                    {% else %}
+                        <img src="https://home.questionbig.com/images/avatar_blank.png" height="100" width="100"#}
+                             id="prof-pic"/>
+                    {% endifnotequal %}
                 </center>
                 <!-- END SIDEBAR USERPIC -->
                 <!-- SIDEBAR USER TITLE -->
